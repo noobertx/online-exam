@@ -1,0 +1,41 @@
+<h1 class="text-center mb-3">{{title}}</h1>
+<form action="/api/members" method="POST" class="mb-4">
+	<div class="form-group">
+		<label for="name">Name</label>
+		<input type="text" name="name" class="form-control">
+	</div>
+	<div class="form-group">
+		<label for="password">Password</label>
+		<input type="password" name="password" class="form-control">
+	</div>
+	<div class="form-group">
+		<input type="hidden" name="userType" class="form-control">
+	</div>
+	<div class="form-group">
+		<label for="gender">Gender</label>
+		<select name="gender" class="form-control">
+			<option value="" selected disabled></option>
+			<option value="F">Female</option>
+			<option value="M">Male</option>
+		</select>
+	</div>
+	<div class="form-group">
+		<label for="college">College</label>
+		<input type="text" name="college" class="form-control">
+	</div>
+	<div class="form-group">
+		<label for="name">Email</label>
+		<input type="text" name="email" class="form-control">
+	</div>
+	<div class="form-group">
+		<label for="name">Mobile</label>
+		<input type="text" name="mobile" class="form-control">
+	</div>
+	<input type="submit" value="Add Member" class="btn btn-primary btn-block">
+</form>
+<h4>Members</h4>
+<ul class="list-group">
+	{{#each members}}
+		<li class="list-group-item">{{this.name}} : {{this.email}}</li>
+	{{/each}}
+</ul>
