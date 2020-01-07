@@ -17,12 +17,12 @@ app.use(express.urlencoded({extended:false}));
 
 
 // Homepage route
-app.get('/',(req,res)=> {
-	res.render('index',{
-		title:"Member App Lorem Ipsum",
-		members
-	});
-});
+// app.get('/',(req,res)=> {
+// 	res.render('index',{
+// 		title:"Member App Lorem Ipsum",
+// 		members
+// 	});
+// });
 
 // Handlebars Middleware
 // app.engine('handlebars',exphbs({defaultLayout:'main'}));
