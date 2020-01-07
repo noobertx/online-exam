@@ -1,8 +1,10 @@
 const express = require('express');
 const mongodb = require('mongodb');
+const multer = require('multer');
 const uuid = require('uuid');
+const upload = multer();
 const router = express.Router();
-const members = require("../../Members");
+// const members = require("../../Members");
 
 router.get('/', async (req,res)=>{	
 	// res.json(members) 
@@ -21,8 +23,7 @@ router.get('/:id',(req,res)=>{
 })
 
 // Create Member
-router.post('/',async (req,res)=>{
-
+router.post('/', upload.none(),async (req,res)=>{
 	const members = await loadMembersCollection();
 
 	
@@ -86,10 +87,14 @@ router.delete('/:id',async (req,res)=>{
 })
 //mongodb://heroku_kzkgjmk7:ev0eenrv4jlevttct59op312ub@ds259878.mlab.com:59878/heroku_kzkgjmk7
 async function loadMembersCollection(){
+	// const client = await mongodb.MongoClient.connect("mongodb://localhost:27017/",{
+	// 	 useUnifiedTopology: true 
+	// })
 	const client = await mongodb.MongoClient.connect("mongodb+srv://admin_noobert23:DevSpades1523@onlineexam-id1lr.mongodb.net/test?authSource=admin&replicaSet=OnlineExam-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true",{
 		useNewUrlParser:true
 	})
 
+	// return client.db('OnlineExam').collection('users')
 	return client.db('online-exam').collection('users')
 
 }
