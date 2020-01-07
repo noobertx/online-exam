@@ -25,8 +25,8 @@ app.get('/',(req,res)=> {
 });
 
 // Handlebars Middleware
-app.engine('handlebars',exphbs({defaultLayout:'main'}));
-app.set('view engine','handlebars');
+// app.engine('handlebars',exphbs({defaultLayout:'main'}));
+// app.set('view engine','handlebars');
 
 //set a static folder
 // app.use(express.static(path.join(__dirname,'public')));
