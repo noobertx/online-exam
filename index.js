@@ -29,7 +29,7 @@ app.engine('handlebars',exphbs({defaultLayout:'main'}));
 app.set('view engine','handlebars');
 
 //set a static folder
-app.use(express.static(path.join(__dirname,'public')));
+// app.use(express.static(path.join(__dirname,'public')));
 
 app.use('/api/members',require('./routes/api/members'));
 
