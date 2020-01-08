@@ -82,7 +82,7 @@ async function loadMembersCollection(){
 	})
 
 	// return client.db('OnlineExam').collection('users')
-	return client.db('online-exam').collection('users')
+	return client.db('online-exam').collection('questions')
 
 }
 module.exports = router;

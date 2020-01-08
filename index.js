@@ -15,23 +15,9 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({extended:false}));
 
-
-// Homepage route
-// app.get('/',(req,res)=> {
-// 	res.render('index',{
-// 		title:"Member App Lorem Ipsum",
-// 		members
-// 	});
-// });
-
-// Handlebars Middleware
-// app.engine('handlebars',exphbs({defaultLayout:'main'}));
-// app.set('view engine','handlebars');
-
-//set a static folder
-// app.use(express.static(path.join(__dirname,'public')));
-
 app.use('/api/members',require('./routes/api/members'));
+app.use('/api/questions',require('./routes/api/questions'));
+app.use('/api/quizzes',require('./routes/api/quizzes'));
 
 // Handle Production
 if(process.env.NODE_ENV==='production'){
