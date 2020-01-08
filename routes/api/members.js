@@ -4,6 +4,7 @@ const multer = require('multer');
 const uuid = require('uuid');
 const upload = multer();
 const router = express.Router();
+const ObjectId = require('mongodb').ObjectID
 // const members = require("../../Members");
 
 router.get('/', async (req,res)=>{	
@@ -41,32 +42,26 @@ router.post('/', upload.none(),async (req,res)=>{
 
 
 	res.status(201).send();
-
-	// members.push(newMember);
-	// res.json(members);
-	// res.redirect("/");
 })
 
 // Update Member
 
-router.put('/:id',(req,res)=>{	
-	const found = members.some(member=>member.id===parseInt(req.params.id))
-	if(found){
-		const updMember = req.body;
-		members.forEach(member=>{
-			if(member.id===parseInt(req.params.id)){
-				member.name = updMember.name ? updMember.name : member.name;
-				member.userType = updMember.userType ? updMember.userType : member.userType;
-				member.gender = updMember.gender ? updMember.gender : member.gender;
-				member.college = updMember.college ? updMember.college : member.college;
-				member.email = updMember.email ? updMember.email : member.email;
-				member.mobile = updMember.mobile ? updMember.mobile : member.mobile;
-				member.password = updMember.password ? updMember.password : member.password;
+router.put('/:id',upload.none(),async (req,res)=>{	
+	const members = await loadMembersCollection();
+		await members.updateOne({_id:ObjectId(req.body._id)},{
+			$set:{				
+				name:req.body.name,
+				userType:req.body.userType,
+				gender:req.body.gender,
+				college:req.body.college,
+				email:req.body.email,
+				mobile:req.body.mobile,
+				password:req.body.password
 			}
-		});		
-	}else{
-		res.status(400).json({msg:`No member with the id of ${req.params.id} found`})
-	}
+		})
+
+
+	res.status(201).send();
 })
 
 // Delete Member
