@@ -14,13 +14,17 @@ router.get('/', async (req,res)=>{
 })
 
 //Get Single member
-router.get('/:id',(req,res)=>{	
-	const found = quizzes.some(member=>member.id===parseInt(req.params.id))
-	if(found){
-		res.json(quizzes.filter(member=>member.id=== parseInt(req.params.id)))
-	}else{
-		res.status(400).json({msg:`No member with the id of ${req.params.id} found`})
-	}
+router.get('/:id',async (req,res)=>{	
+	const quizzes = await loadQuizzesCollection();
+	// console.log(req.body);
+
+	res.send(await quizzes.find({_id:new mongodb.ObjectID(req.params.id)}).toArray());
+	// const found = quizzes.some(quiz=>quiz._id===new mongodb.ObjectID(req.params.id))
+	// if(found){
+	// 	res.json(quizzes.filter(quiz=>quiz._id=== new mongodb.ObjectID(req.params.id)))
+	// }else{
+	// 	res.status(400).json({msg:`No member with the id of ${req.params.id} found`})
+	// }
 })
 
 // Create Member
