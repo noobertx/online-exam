@@ -52,16 +52,19 @@ router.post('/', upload.none(),async (req,res)=>{
 // Update Member
 
 router.put('/:id',upload.none(),async (req,res)=>{	
+	console.log(req.body);
 	const quizzes = await loadQuizzesCollection();
-		await quizzes.updateOne({_id:ObjectId(req.body._id)},{
+		await quizzes.updateOne({_id:ObjectId(req.body.quizData._id)},{
 			$set:{				
-				title:req.body.title,
-				items:req.body.items,
-				wrong:req.body.wrong,
-				total:req.body.total,
-				time:req.body.time,
-				intro:req.body.intro,
-				tag:req.body.tag,
+				title:req.body.quizData.title,
+				items:req.body.quizData.items,
+				wrong:req.body.quizData.wrong,
+				total:req.body.quizData.total,
+				time:req.body.quizData.time,
+				intro:req.body.quizData.intro,
+				tag:req.body.quizData.tag,
+				quizItems:req.body.quizItems,
+				settings:req.body.settings,
 			}
 		})
 
