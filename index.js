@@ -17,6 +17,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({extended:false}));
 
+app.use('/api/login',require('./routes/api/login'));
 app.use('/api/members',require('./routes/api/members'));
 app.use('/api/questions',require('./routes/api/questions'));
 app.use('/api/quizzes',require('./routes/api/quizzes'));
