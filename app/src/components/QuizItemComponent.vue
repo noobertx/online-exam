@@ -169,6 +169,7 @@ export default {
         quizData:{
         title:'New Created Quiz',
         items:0,
+        total:0,
         wrong:0,        
         intro:'Lorem Ipsume this is an easy quiz',
         tag:'',
@@ -197,7 +198,10 @@ export default {
       this.quiz.quizData = quiz[0];
       this.quiz.quizItems = quiz[0].quizItems;
       this.quiz.settings = quiz[0].settings;
-      this.quiz.meta = quiz[0].meta;
+      this.quiz.meta = quiz[0].meta || {};
+
+      this.quiz.meta.total = 0;
+      this.quiz.meta.items = 0;
       }
       // console.log(quiz[0].quizItems);
     }catch(err){
@@ -257,9 +261,11 @@ export default {
       for (var i=0;i<this.quiz.quizItems.length;i+=1){
         sum+= parseInt(this.quiz.quizItems[i].points)
       }
+      this.quiz.meta.total=sum;
       return sum;
     },
     getTotalItems(){
+      this.quiz.meta.items=this.quiz.quizItems.length;
       return this.quiz.quizItems.length;
     }
   }

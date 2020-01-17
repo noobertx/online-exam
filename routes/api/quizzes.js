@@ -30,9 +30,6 @@ router.get('/:id',async (req,res)=>{
 // Create Member
 router.post('/', upload.none(),async (req,res)=>{
 	const quizzes = await loadQuizzesCollection();
-
-	console.log(req.body);
-
 	const result = await quizzes.insertOne({
 		examId:uuid.v4(),
 		title:req.body.quizData.title,
@@ -44,6 +41,7 @@ router.post('/', upload.none(),async (req,res)=>{
 		tag:req.body.quizData.tag,
 		quizItems:req.body.quizItems,
 		settings:req.body.settings,
+		meta:req.body.meta,
 		date: new Date()
 	})
 
@@ -54,7 +52,6 @@ router.post('/', upload.none(),async (req,res)=>{
 // Update Member
 
 router.put('/:id',upload.none(),async (req,res)=>{	
-	console.log(req.body);
 	const quizzes = await loadQuizzesCollection();
 		await quizzes.updateOne({_id:ObjectId(req.body.quizData._id)},{
 			$set:{				
@@ -67,6 +64,7 @@ router.put('/:id',upload.none(),async (req,res)=>{
 				tag:req.body.quizData.tag,
 				quizItems:req.body.quizItems,
 				settings:req.body.settings,
+				meta:req.body.meta,
 			}
 		})
 

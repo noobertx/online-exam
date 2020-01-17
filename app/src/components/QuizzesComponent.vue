@@ -42,9 +42,10 @@
         <thead>
           <tr>
             <th scope="col">Title</th>
-            <th scope="col">Duration</th>
+            <th scope="col">Duration (minutes)</th>
             <th scope="col">Tag</th>
-            <th scope="col">Total</th>
+            <th scope="col">Items</th>
+            <th scope="col">Total Points</th>
           </tr>
         </thead>
         <tbody>          
@@ -53,9 +54,13 @@
           v-bind:index="index" 
           v-bind:key="quiz._id">
             <td><a :href="'#/quizzes/'+quiz._id">{{quiz.title}}</a></td>
-            <td>{{quiz.time}}</td>
+            <td v-if="quiz.settings">{{quiz.settings.time}}</td>
+            <td></td>
             <td>{{quiz.tag}}</td>
-            <td>{{quiz.items}}</td>
+            <td v-if="quiz.meta">{{quiz.meta.items}}</td>
+            <td v-else></td>
+            <td v-if="quiz.meta">{{quiz.meta.total}}</td>
+            <td v-else></td>
           </tr>
         </tbody>
       </table>
