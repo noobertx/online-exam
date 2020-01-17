@@ -37,19 +37,29 @@
     <hr>
     <p class="error" v-if="error">{{error}}</p>
     <div class="quiz-container">
-      <div class="quiz" 
-      v-for="(quiz,index) in quizzes" 
-      v-bind:item="quiz" 
-      v-bind:index="index" 
-      v-bind:key="quiz._id"
-      @click="editQuiz(quiz)">
-        <div class="title">{{quiz.title}}</div>
-        <br>
-        <a :href="'#/quizzes/'+quiz._id">Edit</a>
-        <button v-on:click="deleteQuiz(quiz._id)">Remove</button>
-        <p class="text">{{quiz.intro}}</p>
-        <p>{{quiz.time}} minutes | {{quiz.tag}} | {{quiz._id}}</p>        
-      </div>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Title</th>
+            <th scope="col">Duration</th>
+            <th scope="col">Tag</th>
+            <th scope="col">Time</th>
+          </tr>
+        </thead>
+        <tbody>          
+          <tr v-for="(quiz,index) in quizzes" 
+          v-bind:item="quiz" 
+          v-bind:index="index" 
+          v-bind:key="quiz._id">
+            <td><a :href="'#/quizzes/'+quiz._id">{{quiz.title}}</a></td>
+            <td>{{quiz.time}}</td>
+            <td>{{quiz.tag}}</td>
+            <td>{{quiz.time}}</td>
+          </tr>
+        </tbody>
+      </table>
+  
     </div>
    
   </div>
