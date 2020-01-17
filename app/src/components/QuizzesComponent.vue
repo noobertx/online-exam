@@ -44,7 +44,7 @@
             <th scope="col">Title</th>
             <th scope="col">Duration</th>
             <th scope="col">Tag</th>
-            <th scope="col">Time</th>
+            <th scope="col">Total</th>
           </tr>
         </thead>
         <tbody>          
@@ -55,7 +55,7 @@
             <td><a :href="'#/quizzes/'+quiz._id">{{quiz.title}}</a></td>
             <td>{{quiz.time}}</td>
             <td>{{quiz.tag}}</td>
-            <td>{{quiz.time}}</td>
+            <td>{{quiz.items}}</td>
           </tr>
         </tbody>
       </table>

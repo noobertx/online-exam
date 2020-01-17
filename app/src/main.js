@@ -16,6 +16,7 @@ const routes = [
   { path: '/login', component:require("./components/auth/Login.vue").default },
   { path: '/members', component:require("./components/MembersComponent.vue").default },
   { path: '/quizzes', component:require("./components/QuizzesComponent.vue").default },
+  { path: '/quizzes/add', component:require("./components/QuizItemComponent.vue").default },
   { path: '/quizzes/:id', component:require("./components/QuizItemComponent.vue").default },
   { path: '/quiz-listings/', component:require("./components/frontend/QuizListings.vue").default },
   { path: '/take-quiz/:id', component:require("./components/frontend/TakeQuiz.vue").default },

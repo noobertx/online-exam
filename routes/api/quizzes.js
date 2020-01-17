@@ -31,22 +31,24 @@ router.get('/:id',async (req,res)=>{
 router.post('/', upload.none(),async (req,res)=>{
 	const quizzes = await loadQuizzesCollection();
 
-	
+	console.log(req.body);
 
-	await quizzes.insertOne({
+	const result = await quizzes.insertOne({
 		examId:uuid.v4(),
-		title:req.body.title,
-		items:req.body.items,
-		wrong:req.body.wrong,
-		total:req.body.total,
-		time:req.body.time,
-		intro:req.body.intro,
-		tag:req.body.tag,
+		title:req.body.quizData.title,
+		items:req.body.quizData.items,
+		wrong:req.body.quizData.wrong,
+		total:req.body.quizData.total,
+		time:req.body.quizData.time,
+		intro:req.body.quizData.intro,
+		tag:req.body.quizData.tag,
+		quizItems:req.body.quizItems,
+		settings:req.body.settings,
 		date: new Date()
 	})
 
 
-	res.status(201).send();
+	res.status(201).send(result.insertedId.toString());
 })
 
 // Update Member

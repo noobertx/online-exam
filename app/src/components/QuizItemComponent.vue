@@ -167,10 +167,10 @@ export default {
     return {
       quiz:{
         quizData:{
-        title:'',
+        title:'New Created Quiz',
         items:0,
         wrong:0,        
-        intro:'',
+        intro:'Lorem Ipsume this is an easy quiz',
         tag:'',
         },
         quizItems:[],
@@ -191,12 +191,14 @@ export default {
   },
   async created(){
     try{
+      if(this.$route.params.id){
 
       let quiz = await QuizService.getQuiz(this.$route.params.id);
       this.quiz.quizData = quiz[0];
       this.quiz.quizItems = quiz[0].quizItems;
       this.quiz.settings = quiz[0].settings;
       this.quiz.meta = quiz[0].meta;
+      }
       // console.log(quiz[0].quizItems);
     }catch(err){
       this.error = err.message;
@@ -238,9 +240,15 @@ export default {
     },
     async saveQuiz(){
       // console.log(this.$route.params.id,this.quiz);
-      await QuizService.updateQuiz(this.$route.params.id,this.quiz);
-      let quiz = await QuizService.getQuiz(this.$route.params.id);
-      this.quiz.quizData = quiz[0];
+      if(this.$route.params.id){        
+        await QuizService.updateQuiz(this.$route.params.id,this.quiz);
+        let quiz = await QuizService.getQuiz(this.$route.params.id);
+        this.quiz.quizData = quiz[0];
+      }else{
+        var _id = await QuizService.insertQuiz(this.quiz);
+        location.hash="#/quizzes/"+_id.data
+
+      }
     }
   },
   computed:{
