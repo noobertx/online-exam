@@ -18,8 +18,11 @@
             <li class="nav-item">
               <router-link  to="/quiz-listings" class="nav-link">Take Quiz</router-link>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" v-if="!isLoggedIn()">
               <router-link  to="/login" class="nav-link">Login</router-link>
+            </li>
+            <li class="nav-item" v-else>
+              <router-link  to="#" class="nav-link">Profile</router-link>
             </li>
           </ul>
         </div>
@@ -35,7 +38,18 @@
 // import QuestionsComponent from './components/QuestionsComponent.vue'
 
 export default {
-  name: 'app'}
+  name: 'app',
+  methods:{
+    isLoggedIn(){
+      console.log(this);
+      return false;
+    }
+  },
+  mounted(){
+    this.$store.commit('loadTokens');
+    console.log(this.$store.getters.getAccessToken);
+  }
+}
 </script>
 
 <style>
