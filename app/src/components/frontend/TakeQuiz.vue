@@ -1,5 +1,12 @@
 <template>
 	<div class="container">
+
+    <h1>{{quiz.title}}</h1>
+    <p>{{quiz.description}}</p>
+    <p class="small">{{timer}}</p>
+    
+    <div id="clockdiv"></div>
+
 		<div class="row" v-for="(item,index) in quiz.quizItems">
 			<div class="col-md-12">
 				<p>{{index+1}}. {{item.question}}</p>
@@ -30,7 +37,9 @@
     		  	quizPaper:[],
     		  	score:0
     		  },
-    		  quiz:[],    		  
+    		  quiz:[],
+          timer: "",
+          date: new Date()
     		}
   		},
   		async created(){
@@ -41,6 +50,10 @@
       				this.quiz.quizItems = this.shuffle(this.quiz.quizItems ) ;
       			}
       			this.generateQuizPaper(this.quiz.quizItems);
+            if(this.quiz.settings.time){
+              this.renderCountDownTimer(this.quiz.settings.time);
+            }
+
     		}catch(err){
       			this.error = err.message;
 
@@ -78,7 +91,34 @@
 			test(){
   				// console.log(this.user.quizPaper);
   			},
-  			checkResults(){
+
+      renderCountDownTimer(time){
+         var d = new Date(),context=this;
+            d.setMinutes(d.getMinutes()+time);           
+
+             var timeinterval = setInterval(function(){
+              var t = context.getTimeRemaining(d);
+              context.timer =   t.hours + ' HRS ' + t.minutes + ' Mins ' + t.seconds+" Secs";
+              if(t.total<=0){
+                clearInterval(timeinterval);
+              }
+            },1000)
+      },
+      getTimeRemaining(endtime){
+        var t = Date.parse(endtime) - Date.parse(new Date());
+        var seconds = Math.floor( (t/1000) % 60 );
+        var minutes = Math.floor( (t/1000/60) % 60 );
+        var hours = Math.floor( (t/(1000*60*60)) % 24 );
+        var days = Math.floor( t/(1000*60*60*24) );
+        return {
+          'total': t,
+          'days': days,
+          'hours': hours,
+          'minutes': minutes,
+          'seconds': seconds
+        };
+      },
+  		checkResults(){
   				var context = this;
   				this.user.score = 0 ;
   				this.user.quizPaper.forEach((i)=>{
