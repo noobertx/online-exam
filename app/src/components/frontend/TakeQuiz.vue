@@ -7,8 +7,8 @@
 				<ul v-for="(option,optIndex) in item.options" class="list-group mb-3">
 					<li class="list-group-item">
 						<label>
-							<input type="radio" :value = "option" v-model="user.quizPaper[index].answer" @input="test">
-							{{option}}
+							<input type="radio" :value = "option.cid" v-model="user.quizPaper[index].answer" @input="test">
+							{{option.text}}
 						</label>
 					</li>
 				</ul>
