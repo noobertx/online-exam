@@ -55,11 +55,8 @@
 
       <!-- Sidebar -->
     <nav id="sidebar">
-      <div class="sidebar-header">
-        <h3>Online Exam</h3>
-      </div>
 
-      <div class="input-group mb-3 pl-3 pr-3">
+      <div class="input-group mb-3 pl-3 pr-3 pt-3">
         <div class="input-group-prepend">
           <span class="input-group-text" id="title">Quiz Title</span>
         </div>

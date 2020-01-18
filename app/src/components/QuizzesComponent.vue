@@ -1,40 +1,7 @@
 <template>
-  <div class="container">
+  <div>
     <h1>Quizzes</h1>
-    <button @click="createNew">Add New Quiz</button>
-    <div style="display: none;">
-      
-  <div class="form-group">
-    <label for="title">Title</label>
-    <input type="text" name="name" id="name" class="form-control" v-model="quizdata.title">
-  </div>
-  <div class="form-group">
-    <label for="items">Items</label>
-    <input type="number" name="items" id="items" class="form-control" v-model="quizdata.items">
-  </div>
-  <div class="form-group">
-    <label for="wrong">Wrong</label>
-    <input type="number" name="wrong" id="wrong" class="form-control" v-model="quizdata.wrong">
-  </div>
-  <div class="form-group">
-    <label for="total">Total</label>
-    <input type="number" name="total" id="total" class="form-control" v-model="quizdata.total">
-  </div>
-  <div class="form-group">
-    <label for="time">Time (minutes)</label>
-    <input type="number" name="time" id="time" class="form-control" v-model="quizdata.time">
-  </div>
-  <div class="form-group">
-    <label for="tag">Tag</label>
-    <input type="text" name="tag" id="tag" class="form-control" v-model="quizdata.tag">
-  </div>
-  <div class="form-group">
-    <label for="intro">Introduction</label>
-    <textarea name="intro" id="" cols="30" rows="10"  v-model="quizdata.intro"></textarea>
-  </div>
-   <button v-on:click="addQuiz">Save</button>
-    </div>
-    <hr>
+    <router-link  to="/quizzes/add" class="btn btn-primary mb-3">Add new Quiz</router-link>      
     <p class="error" v-if="error">{{error}}</p>
     <div class="quiz-container">
 
@@ -116,18 +83,6 @@ export default {
       this.quizdata = quiz;
       // console.log(this.quizdata);
     },
-    createNew(){
-      this.mode="create";
-      this.quizdata={
-        name:'',
-        password:'',
-        userType:0,
-        gender:'',
-        college:'',
-        title:'',
-        mobile:'',
-      } 
-    }
   }
 }
 </script>

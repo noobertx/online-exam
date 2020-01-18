@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="">
     <h1>Questions</h1>
     <button @click="createNew">Add New Question</button>
 
