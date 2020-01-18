@@ -1,3 +1,4 @@
+
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import App from './App.vue'
@@ -5,6 +6,7 @@ import {store} from './stores/store'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.min.js'
 import 'font-awesome/css/font-awesome.min.css'
+import axios from 'axios';
 
 
 Vue.config.productionTip = false
@@ -61,37 +63,21 @@ const router = new VueRouter({
   routes // short for `routes: routes`
 })
 
-router.beforeEach((to, from, next) => {
-    if(to.matched.some(record => record.meta.requiresAuth)) {
-        if (localStorage.getItem('credential') == null) {
-            next({
-                path: '/login',
-                params: { nextUrl: to.fullPath }
-            })
-        } else {
-            let user = JSON.parse(localStorage.getItem('user'))
-            if(to.matched.some(record => record.meta.is_admin)) {
-                if(user.is_admin == 1){
-                    next()
-                }
-                else{
-                    next({ name: 'userboard'})
-                }
-            }else {
-                next()
-            }
-        }
-    } else if(to.matched.some(record => record.meta.guest)) {
-        if(localStorage.getItem('jwt') == null){
-            next()
-        }
-        else{
-            next({ name: 'userboard'})
-        }
-    }else {
-        next() 
-    }
-})
+
+//https://scotch.io/tutorials/vue-authentication-and-route-handling-using-vue-router
+// router.beforeEach((to, from, next) => {
+//     if(to.matched.some(record => record.meta.requiresAuth)) {
+//         if (localStorage.getItem('credentials') == null) {
+//             next({
+//                 path: '/login',
+//                 params: { nextUrl: to.fullPath }
+//             })
+//         } else {
+
+//             next();
+//         }
+//     }
+// })
 
 new Vue({
 	router,

@@ -6,13 +6,17 @@ export const store = new Vuex.Store({
 	state:{
 		tokens:{
 			accessToken:"",
-			refreshToken:""
+			refreshToken:"",
+			name:"",
+			email:""
 		}
 	},
 	mutations:{
 		saveToken(state,params){
 			state.tokens.accessToken=params.accessToken;
 			state.tokens.refreshToken=params.refreshToken;
+			state.tokens.name=params.name;
+			state.tokens.email=params.email;
 			localStorage.setItem('credentials', JSON.stringify(state.tokens));
 		},
 		loadTokens(state){
@@ -21,7 +25,6 @@ export const store = new Vuex.Store({
 				state.tokens.accessToken=credentials.accessToken || "";
 				state.tokens.refreshToken=credentials.refreshToken || ""; 
 			}
-			console.log(state);
 		}
 	},
 	actions:{

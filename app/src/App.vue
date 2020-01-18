@@ -41,13 +41,17 @@ export default {
   name: 'app',
   methods:{
     isLoggedIn(){
-      console.log(this);
+
       return false;
     }
   },
-  mounted(){
+  async created(){
     this.$store.commit('loadTokens');
-    console.log(this.$store.getters.getAccessToken);
+  },
+
+  mounted(){
+    
+    this.$store.getters.getAccessToken;
   }
 }
 </script>

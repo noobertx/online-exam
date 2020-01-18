@@ -26,24 +26,29 @@ router.post('/',upload.none(),async (req,res)=>{
 		})
 
 		
-		res.json({accessToken:accessToken,refreshToken:refreshToken});
+		res.json({
+			accessToken:accessToken,
+			refreshToken:refreshToken,
+			name:user[0].name,
+			email:user[0].email});
 
 	}else{
 		res.json({});				
 	}
 })
 
-// app.post('/token',(req,res)=>{
-// 	const refreshToken = req.body.token;
-// 	if(refreshToken==null) return res.sendStatus(401)
-// 	if(!refreshTokens.includes(refreshToken)) return res.sendStatus(403)
+router.post('/token',(req,res)=>{
+	const refreshToken = req.body.token;
+	console.log(process.env.REFRESH_TOKEN_SECRET);
+	// if(refreshToken==null) return res.sendStatus(401)
+	// if(!refreshTokens.includes(refreshToken)) return res.sendStatus(403)
 
-// 	jwt.verify(refreshToken,process.env.REFRESH_TOKEN_SECRET,(err,user)=>{
-// 		if(err) return res.sendStatus(403)
-// 		const accessToken = generateAccessToken({name:user.name});
-// 		res.json({accessToken:accessToken});
-// 	});
-// })
+	// jwt.verify(refreshToken,process.env.REFRESH_TOKEN_SECRET,(err,user)=>{
+	// 	if(err) return res.sendStatus(403)
+	// 	const accessToken = generateAccessToken({name:user.name});
+	// 	res.json({accessToken:accessToken});
+	// });
+})
 
 //Get Single member
 router.get('/:id',(req,res)=>{	
@@ -109,7 +114,16 @@ router.delete('/:id',async (req,res)=>{
 
 })
 //mongodb://heroku_kzkgjmk7:ev0eenrv4jlevttct59op312ub@ds259878.mlab.com:59878/heroku_kzkgjmk7
-
+function authenticateToken(req,res,next){
+	const authHeader = req.headers['authorization'];
+	const token = authHeader &&  authHeader.split(" ")[1];
+	if(token == null) return res.sendStatus(401)
+		jwt.verify(token,process.env.ACCESS_TOKEN_SECRET,(err,user)=>{
+			if(err)	 return res.sendStatus(403)			
+			req.user = user
+			next()
+		})
+}
 function generateAccessToken(user){
 	return jwt.sign(user,process.env.ACCESS_TOKEN_SECRET,{expiresIn:'30sec'});
 }
