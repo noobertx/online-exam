@@ -19,7 +19,7 @@
               <router-link  to="/quiz-listings" class="nav-link">Take Quiz</router-link>
             </li>
             <li class="nav-item">
-              <a class="nav-link disabled" href="#">Disabled</a>
+              <router-link  to="/login" class="nav-link">Login</router-link>
             </li>
           </ul>
         </div>

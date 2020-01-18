@@ -43,7 +43,14 @@
   		},
   		methods:{
   			async logInUser(){
-           this.userdata = await LoginService.getLogin(this.user);
+          this.userdata = await LoginService.getLogin(this.user);
+          var context = this
+
+
+          localStorage.setItem('credentials', JSON.stringify({
+            accessToken:context.userdata.accessToken,
+            refreshToken:context.userdata.refreshToken
+          }));
   			}
   		}
   	}

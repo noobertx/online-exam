@@ -9,9 +9,7 @@ class LoginService{
 				const res = await axios.post(url,user);
 				const data = res.data;
 				resolve(
-					data.map(login=>({
-						...login
-					}))
+					data
 				)
 			}catch(err){
 				reject(err);
