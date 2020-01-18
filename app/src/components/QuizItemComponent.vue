@@ -31,7 +31,7 @@
                 <label >Choices</label>
 
                 <div class="input-group mb-3" v-for="(value,  index) in quiz.quizItems[currentIndex].options">
-  <input type="text" class="form-control" placeholder="Input Choice Detail" aria-label="Input Choice Detail" aria-describedby="basic-addon2" v-model="quiz.quizItems[currentIndex].options[index]">
+  <input type="text" class="form-control" placeholder="Input Choice Detail" aria-label="Input Choice Detail" aria-describedby="basic-addon2" v-model="quiz.quizItems[currentIndex].options[index].text">
   <div class="input-group-append">
     <button class="btn btn-outline-secondary" type="button" @click="removeAnswer(index)">&times;</button>
   </div>
@@ -41,7 +41,7 @@
                 <label for="answer">Answer</label>
                   <select class="form-control" id="answer" v-model="quiz.quizItems[currentIndex].correctAnswer">
                     <option value="" selected disabled></option>
-                    <option v-for="option in quiz.quizItems[currentIndex].options" v-bind:value="option">{{ option }}</option>
+                    <option v-for="option in quiz.quizItems[currentIndex].options" v-bind:value="option.cid">{{ option.text }}</option>
                   </select>
               </div>
             </div>
@@ -157,6 +157,7 @@
 <script>
   import QuizService from '../QuizItemService'
   import $ from 'jquery'
+  const uuid = require('uuid');
 
 export default {
   name: 'QuizzesComponent',
@@ -188,6 +189,7 @@ export default {
     }
   },
   async created(){
+
     try{
       if(this.$route.params.id){
 
@@ -217,10 +219,17 @@ export default {
   methods:{
     addItem(){
       this.quiz.quizItems.push({
+        qid:uuid.v4(),
         type:"single-choice-r",
         question:"Choose Yes",
         points:1,
-        options:["Yes","No"],
+        options:[{
+          cid:uuid.v4(),
+          text:"Yes"
+        },{
+          cid:uuid.v4(),
+          text:"No"
+        }],
         correctAnswer:[]
       });
       this.currentIndex = this.quiz.quizItems.length - 1;
@@ -237,7 +246,11 @@ export default {
       this.quiz.quizItems[this.currentIndex].options.splice(id,1);
     },
     addChoice(){
-      this.quiz.quizItems[this.currentIndex].options.push("");
+
+      this.quiz.quizItems[this.currentIndex].options.push({
+        cid:uuid.v4(),
+        text:"",
+      });
     },
     async saveQuiz(){
       // console.log(this.$route.params.id,this.quiz);
@@ -262,6 +275,7 @@ export default {
       return sum;
     },
     getTotalItems(){
+      console.log(this);
       this.quiz.meta.items=this.quiz.quizItems.length;
       return this.quiz.quizItems.length;
     }
