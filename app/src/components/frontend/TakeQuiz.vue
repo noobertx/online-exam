@@ -10,13 +10,17 @@
 		<div class="row" v-for="(item,index) in quiz.quizItems">
 			<div class="col-md-12">
 				<p>{{index+1}}. {{item.question}}</p>
-				
+
 				<ul v-for="(option,optIndex) in item.options" class="list-group mb-3">
 					<li class="list-group-item">
-						<label>
+						<label v-if="item.type=='single-choice-r'">
 							<input type="radio" :value = "option.cid" v-model="user.quizPaper[index].answer" @input="test">
 							{{option.text}}
 						</label>
+            <label v-if="item.type=='multiple-choice'">
+              <input type="checkbox" :value = "option.cid" :id="option.cid"  v-model="user.quizPaper[index].answer" @input="test">
+              {{option.text}}
+            </label>
 					</li>
 				</ul>
 
@@ -84,12 +88,12 @@
 				 this.user.quizPaper = collection.map((i)=>{
 					return {
 						question : i.question,
-						answer:""
+						answer:[]
 					};
 				})
 			},
 			test(){
-  				// console.log(this.user.quizPaper);
+
   			},
 
       renderCountDownTimer(time){
@@ -124,9 +128,23 @@
   				this.user.quizPaper.forEach((i)=>{
   					context.quiz.quizItems.forEach((q)=>{
   						if(i.question==q.question){
-  							if(i.answer==q.correctAnswer){
-  								context.user.score += parseInt(q.points);
-  							}
+
+                  if(q.type=="multiple-choice"){
+                    var points = q.points;
+                    var correct = q.correctAnswer.length;
+                    var score = points/correct;
+
+                    q.correctAnswer.forEach(function(answer){
+                      if(i.answer.indexOf(answer)!=-1){
+                        context.user.score += score;
+                      }
+                    })
+
+                  }else{                   
+      							if(i.answer==q.correctAnswer){
+  	     							context.user.score += parseInt(q.points);
+  			     				}
+                  }
   						}
   					})					
 				})
