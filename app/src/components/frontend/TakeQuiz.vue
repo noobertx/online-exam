@@ -10,8 +10,12 @@
 		<div class="row" v-for="(item,index) in quiz.quizItems">
 			<div class="col-md-12">
 				<p>{{index+1}}. {{item.question}}</p>
-
-				<ul v-for="(option,optIndex) in item.options" class="list-group mb-3">
+        <select class="form-control mb-3" v-if="item.type=='single-choice-d'" v-model="user.quizPaper[index].answer">
+          <option value="" selected disabled></option>
+          <option v-for="(option,optIndex)  in item.options" :value="option.cid">{{option.text}}</option>    
+        </select>
+        <input type="text" class="form-control mb-3" v-else-if="item.type=='fill-in-the-blanks'" v-model="user.quizPaper[index].answer">
+				<ul v-for="(option,optIndex) in item.options" v-else class="list-group mb-3">
 					<li class="list-group-item">
 						<label v-if="item.type=='single-choice-r'">
 							<input type="radio" :value = "option.cid" v-model="user.quizPaper[index].answer" @input="test">
@@ -21,6 +25,7 @@
               <input type="checkbox" :value = "option.cid" :id="option.cid"  v-model="user.quizPaper[index].answer" @input="test">
               {{option.text}}
             </label>
+
 					</li>
 				</ul>
 
@@ -140,6 +145,8 @@
                       }
                     })
 
+                  }else if(q.type=="fill-in-the-blanks"){
+                    console.log(q.correctAnswer)
                   }else{                   
       							if(i.answer==q.correctAnswer){
   	     							context.user.score += parseInt(q.points);
