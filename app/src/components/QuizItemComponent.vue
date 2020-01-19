@@ -24,6 +24,29 @@
                 id="points" placeholder="2" 
                 v-model="quiz.quizItems[currentIndex].points">
               </div>
+              <div class="form-group">
+                <label for="question_type">Type</label>
+                <select name="question_type" class="form-control" id="question_type" v-model="quiz.quizItems[currentIndex].type">
+                  <option value="" disabled selected></option>
+                  <option v-for="choice in [{
+                    value:'single-choice-r',
+                    text:'Single Choice Radio',
+                  },{
+                    value:'single-choice-d',
+                    text:'Single Choice Dropdown',
+                  },{
+                    value:'multiple-choice',
+                    text:'Multiple Choice',
+                  },{
+                    value:'fill-in-the-blanks',
+                    text:'Fill In the Blanks',
+                  },{
+                    value:'matching-text',
+                    text:'Matching Text',
+                  }]" :value="choice.value">{{choice.text}}</option>
+                </select>                
+              </div>
+
               <div class="mb-3">
                 <button class="btn btn-success" @click="addChoice">Add Choices</button>
               </div>
@@ -39,7 +62,11 @@
               </div>
               <div class="form-group">
                 <label for="answer">Answer</label>
-                  <select class="form-control" id="answer" v-model="quiz.quizItems[currentIndex].correctAnswer">
+                  <select v-if="isMultipleAnswer(quiz.quizItems[currentIndex].type)" class="form-control" id="answer" v-model="quiz.quizItems[currentIndex].correctAnswer" multiple>
+                    <option value="" selected disabled></option>
+                    <option v-for="option in quiz.quizItems[currentIndex].options" v-bind:value="option.cid">{{ option.text }}</option>
+                  </select>
+                  <select v-else class="form-control" id="answer" v-model="quiz.quizItems[currentIndex].correctAnswer" >
                     <option value="" selected disabled></option>
                     <option v-for="option in quiz.quizItems[currentIndex].options" v-bind:value="option.cid">{{ option.text }}</option>
                   </select>
@@ -230,7 +257,7 @@ export default {
           cid:uuid.v4(),
           text:"No"
         }],
-        correctAnswer:[]
+        correctAnswer:''
       });
       this.currentIndex = this.quiz.quizItems.length - 1;
       this.mode="create";
@@ -256,6 +283,7 @@ export default {
       // console.log(this.$route.params.id,this.quiz);
       if(this.$route.params.id){        
         await QuizService.updateQuiz(this.$route.params.id,this.quiz);
+        console.log(this.quiz);
         let quiz = await QuizService.getQuiz(this.$route.params.id);
         this.quiz.quizData = quiz[0];
       }else{
@@ -263,6 +291,11 @@ export default {
         location.hash="#/quizzes/"+_id.data
 
       }
+    },
+    isMultipleAnswer(type){
+      console.log(type);
+      return (type=="multiple-choice");
+      //
     }
   },
   computed:{
