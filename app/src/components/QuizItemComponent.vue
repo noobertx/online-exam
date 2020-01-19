@@ -46,7 +46,10 @@
                   }]" :value="choice.value">{{choice.text}}</option>
                 </select>                
               </div>
-
+              <div v-if="quiz.quizItems[currentIndex].type=='fill-in-the-blanks'">
+                <input type="text" class="form-control" v-model="quiz.quizItems[currentIndex].correctAnswer">
+              </div>
+            <div v-else>
               <div class="mb-3">
                 <button class="btn btn-success" @click="addChoice">Add Choices</button>
               </div>
@@ -70,6 +73,7 @@
                     <option value="" selected disabled></option>
                     <option v-for="option in quiz.quizItems[currentIndex].options" v-bind:value="option.cid">{{ option.text }}</option>
                   </select>
+              </div>
               </div>
             </div>
           </div>

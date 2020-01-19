@@ -146,7 +146,11 @@
                     })
 
                   }else if(q.type=="fill-in-the-blanks"){
-                    console.log(q.correctAnswer)
+                    var userAnswer = i.answer.replace(/\s/g,"").toLowerCase();
+                    var examAnswer = q.correctAnswer.replace(/\s/g,"").toLowerCase();
+                    if(userAnswer==examAnswer){
+                      context.user.score += parseInt(q.points);
+                    }
                   }else{                   
       							if(i.answer==q.correctAnswer){
   	     							context.user.score += parseInt(q.points);
