@@ -18,7 +18,8 @@ const routes = [
   { path: '/sign-up', component:require("./components/auth/signUp.vue").default },
   { path: '/login', component:require("./components/auth/Login.vue").default },
   { path: '/members', component:require("./components/MembersComponent.vue").default },
-  { path: '/member/:id', component:require("./components/MembersItemComponent.vue").default },
+  { path: '/members/:id', component:require("./components/MembersItemComponent.vue").default },
+  { path: '/members/add', component:require("./components/MembersItemComponent.vue").default },
   { path: '/quizzes', component:require("./components/QuizzesComponent.vue").default ,meta: 
     { 
       requiresAuth: true,

@@ -1,7 +1,7 @@
 <template>
   <div class="container">
-    <h1>Members</h1>
-    <button @click="createNew">Add New Member</button>
+    <h1>Quizzes</h1>
+    <router-link  to="/members/add" class="btn btn-primary mb-3">Add new Member</router-link>   
 
     <p class="error" v-if="error">{{error}}</p>
     <div class="members-container">

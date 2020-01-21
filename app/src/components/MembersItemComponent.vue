@@ -48,7 +48,14 @@
 		data(){
 			return{
 				member:{
-
+					name:"Lorem Sr",
+					userType:0,
+					gender:"F",
+					college:"UC",
+					email:"lorem-sr@example.com",
+					mobile:"44444",
+					password:"123123",
+					refreshToken:"",
 				}
 			}
 		},
@@ -64,21 +71,12 @@
 		},
 		methods:{
 			async saveMember(){
-    		  // console.log(this.$route.params.id,this.quiz);
-    		  if(this.$route.params.id){        
+
+    		  if(this.$route.params.id!="add"){        
     		    await MemberService.updateMember(this.$route.params.id,this.member);
-    		 //    let member = await MemberService.getMember(this.$route.params.id); 
-    		 //    this.name = member[0].name;
-    			// this.email = member[0].email;
-    			// this.mobile = member[0].mobile;
-    			// this.password = member[0].password;
-    			// this.college = member[0].college;
-    			// this.gender = member[0].gender;
-    			// this.usertype = member[0].usertype;
-    			// this.refreshToken = member[0].refreshToken;
     		  }else{
-    		    // var _id = await QuizService.insertQuiz(this.quiz);
-    		    // location.hash="#/quizzes/"+_id.data		
+    		    var _id = await MemberService.insertMember(this.member);
+    		    location.hash="#/members/"+_id.data		
     		  }
     		},
 		}

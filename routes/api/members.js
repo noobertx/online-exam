@@ -32,9 +32,9 @@ router.get('/:id',async (req,res)=>{
 router.post('/', upload.none(),async (req,res)=>{
 	const members = await loadMembersCollection();
 
-	
+	console.log(req.body);
 
-	await members.insertOne({
+	const result = await members.insertOne({
 		id:uuid.v4(),
 		name:req.body.name,
 		userType:req.body.useryype,
@@ -47,7 +47,7 @@ router.post('/', upload.none(),async (req,res)=>{
 	})
 
 
-	res.status(201).send();
+	res.status(201).send(result.insertedId.toString());
 })
 
 // Update Member
