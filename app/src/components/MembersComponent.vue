@@ -2,39 +2,7 @@
   <div class="container">
     <h1>Members</h1>
     <button @click="createNew">Add New Member</button>
-<!--   <div class="form-group">
-    <label for="name">Name</label>
-    <input type="text" name="name" class="form-control" v-model="userdata.name">
-  </div>
-  <div class="form-group">
-    <label for="password">Password</label>
-    <input type="password" name="password" class="form-control" v-model="userdata.password">
-  </div>
-  <div class="form-group">
-    <input type="hidden" name="userType" class="form-control" v-model="userdata.userType">
-  </div>
-  <div class="form-group">
-    <label for="gender">Gender</label>
-    <select name="gender" class="form-control" v-model="userdata.gender">
-      <option value="" selected disabled></option>
-      <option value="F">Female</option>
-      <option value="M">Male</option>
-    </select>
-  </div>
-  <div class="form-group">
-    <label for="college">College</label>
-    <input type="text" name="college" class="form-control" v-model="userdata.college">
-  </div>
-  <div class="form-group">
-    <label for="name">Email</label>
-    <input type="text" name="email" class="form-control" v-model="userdata.email">
-  </div>
-  <div class="form-group">
-    <label for="name">Mobile</label>
-    <input type="text" name="mobile" class="form-control" v-model="userdata.mobile">
-  </div>
-   <button v-on:click="addMember">Save</button>
-    <hr> -->
+
     <p class="error" v-if="error">{{error}}</p>
     <div class="members-container">
 

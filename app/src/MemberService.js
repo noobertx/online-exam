@@ -18,6 +18,21 @@ class MemberService{
 			}
 		})
 	}
+	static getMember(id){
+		return new Promise(async(resolve,reject)=>{
+			try{
+				const res = await axios.get(`${url}${id}`);
+				const data = res.data;
+				resolve(
+					data.map(member=>({
+						...member
+					}))
+				)
+			}catch(err){
+				reject(err);
+			}
+		})
+	}
 	static updateMember(id,data){
 		return axios.put(`${url}${id}`,data);
 	}

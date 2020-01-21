@@ -14,13 +14,18 @@ router.get('/', async (req,res)=>{
 })
 
 //Get Single member
-router.get('/:id',(req,res)=>{	
-	const found = members.some(member=>member.id===parseInt(req.params.id))
-	if(found){
-		res.json(members.filter(member=>member.id=== parseInt(req.params.id)))
-	}else{
-		res.status(400).json({msg:`No member with the id of ${req.params.id} found`})
-	}
+// router.get('/:id',(req,res)=>{	
+// 	const found = members.some(member=>member.id===parseInt(req.params.id))
+// 	if(found){
+// 		res.json(members.filter(member=>member.id=== parseInt(req.params.id)))
+// 	}else{
+// 		res.status(400).json({msg:`No member with the id of ${req.params.id} found`})
+// 	}
+// })
+
+router.get('/:id',async (req,res)=>{	
+	const members = await loadMembersCollection();
+	res.send(await members.find({_id:new mongodb.ObjectID(req.params.id)}).toArray());	
 })
 
 // Create Member
@@ -32,12 +37,13 @@ router.post('/', upload.none(),async (req,res)=>{
 	await members.insertOne({
 		id:uuid.v4(),
 		name:req.body.name,
-		userType:req.body.userType,
+		userType:req.body.useryype,
 		gender:req.body.gender,
 		college:req.body.college,
 		email:req.body.email,
 		mobile:req.body.mobile,
-		password:req.body.password
+		password:req.body.password,
+		refreshToken:req.body.refreshToken,
 	})
 
 
@@ -51,12 +57,13 @@ router.put('/:id',upload.none(),async (req,res)=>{
 		await members.updateOne({_id:ObjectId(req.body._id)},{
 			$set:{				
 				name:req.body.name,
-				userType:req.body.userType,
+				userType:req.body.useryype,
 				gender:req.body.gender,
 				college:req.body.college,
 				email:req.body.email,
 				mobile:req.body.mobile,
-				password:req.body.password
+				password:req.body.password,
+				refreshToken:req.body.refreshToken,
 			}
 		})
 
