@@ -2,7 +2,7 @@
   <div class="container">
     <h1>Members</h1>
     <button @click="createNew">Add New Member</button>
-  <div class="form-group">
+<!--   <div class="form-group">
     <label for="name">Name</label>
     <input type="text" name="name" class="form-control" v-model="userdata.name">
   </div>
@@ -34,22 +34,33 @@
     <input type="text" name="mobile" class="form-control" v-model="userdata.mobile">
   </div>
    <button v-on:click="addMember">Save</button>
-    <hr>
+    <hr> -->
     <p class="error" v-if="error">{{error}}</p>
-    <div class="member-container">
-      <div class="member" 
-      v-for="(member,index) in members" 
+    <div class="members-container">
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Contact</th>
+            <th scope="col">College</th>
+          </tr>
+        </thead>
+        <tbody>          
+          <tr v-for="(member,index) in members" 
       v-bind:item="member" 
       v-bind:index="index" 
-      v-bind:key="member._id"
-      @click="editMember(member)">
-        <div class="email">{{member.email}}</div>
-        <button v-on:click="deleteMember(member._id)">Remove</button>
-        <p class="text">{{member.name}}</p>
-        <p>{{member.college}} | {{member.mobile}} | {{member._id}}</p>        
-      </div>
-    </div>
-   
+      v-bind:key="member._id">
+            <td><a :href="'#/member/'+member._id">{{member.name}}</a></td>
+           
+            <td>{{member.email}}</td>
+            <td>{{member.mobile}}</td>
+            <td>{{member.college}}</td>
+          </tr>
+        </tbody>
+      </table>  
+    </div>   
   </div>
 </template>
 
