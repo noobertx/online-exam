@@ -20,11 +20,11 @@
       v-bind:item="member" 
       v-bind:index="index" 
       v-bind:key="member._id">
-            <td><a :href="'#/member/'+member._id">{{member.name}}</a></td>
-           
+            <td><a :href="'#/member/'+member._id">{{member.name}}</a></td>           
             <td>{{member.email}}</td>
             <td>{{member.mobile}}</td>
             <td>{{member.college}}</td>
+            <td><a href="#" class="btn btn-sm btn-danger" title="Remove Member" @click="deleteMember(member._id)">x</a></td>
           </tr>
         </tbody>
       </table>  
@@ -89,7 +89,8 @@ export default {
         email:'',
         mobile:'',
       } 
-    }
+    },
+ 
   }
 }
 </script>

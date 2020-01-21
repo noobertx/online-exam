@@ -32,7 +32,6 @@ router.get('/:id',async (req,res)=>{
 router.post('/', upload.none(),async (req,res)=>{
 	const members = await loadMembersCollection();
 
-	console.log(req.body);
 
 	const result = await members.insertOne({
 		id:uuid.v4(),
