@@ -18,11 +18,11 @@
 				<ul v-for="(option,optIndex) in item.options" v-else class="list-group mb-3">
 					<li class="list-group-item">
 						<label v-if="item.type=='single-choice-r'">
-							<input type="radio" :value = "option.cid" v-model="user.quizPaper[index].answer" @input="test">
+							<input type="radio" :value = "option.cid" v-model="user.quizPaper[index].answer" @input="test(index)">
 							{{option.text}}
 						</label>
             <label v-if="item.type=='multiple-choice'">
-              <input type="checkbox" :value = "option.cid" :id="option.cid"  v-model="user.quizPaper[index].answer" @input="test">
+              <input type="checkbox" :value = "option.cid" :id="option.cid"  v-model="user.quizPaper[index].answer" :disabled="user.quizPaper[index].answer.length > item.correctAnswer.length-1 && user.quizPaper[index].answer.indexOf(option.cid) === -1" >
               {{option.text}}
             </label>
 
@@ -83,7 +83,9 @@ import 'vue-toast-notification/dist/index.css';
       			
     		}
   		},
+      computed:{
 
+      },
   		methods:{
   			shuffle(array) {
   				var currentIndex = array.length, temporaryValue, randomIndex;
@@ -111,9 +113,22 @@ import 'vue-toast-notification/dist/index.css';
 					};
 				})
 			},
-			test(){
+			test(index){
+        if(this.quiz.quizItems[index].type=="multiple-choice"){
+          var max = this.quiz.quizItems[index].correctAnswer.length;
+          console.log(max+" <= "+this.user.quizPaper[index].answer.length)
+          if(max<=this.user.quizPaper[index].answer.length){
+             Vue.$toast.success('Your Have selected More than '+this.quiz.quizItems[index].correctAnswer.length+"answers ", {
+              position: 'top-right',
+              dismissible:true,
+              duration:10000
+            })
 
-  			},
+            this.user.quizPaper[index].answer.splice(2,1);
+          }
+        }
+        console.log(this.quiz.quizItems[index]);
+  		},
 
       renderCountDownTimer(time){
          var d = new Date(),context=this;
@@ -160,10 +175,12 @@ import 'vue-toast-notification/dist/index.css';
                     })
 
                   }else if(q.type=="fill-in-the-blanks"){
+                    if(i.answer.length>0){                      
                     var userAnswer = i.answer.replace(/\s/g,"").toLowerCase();
                     var examAnswer = q.correctAnswer.replace(/\s/g,"").toLowerCase();
-                    if(userAnswer==examAnswer){
-                      context.user.score += parseInt(q.points);
+                      if(userAnswer==examAnswer){
+                        context.user.score += parseInt(q.points);
+                      }
                     }
                   }else{                   
       							if(i.answer==q.correctAnswer){
@@ -173,6 +190,12 @@ import 'vue-toast-notification/dist/index.css';
   						}
   					})					
 				})
+
+          Vue.$toast.success('Your Score is '+this.user.score, {
+              position: 'top-right',
+              dismissible:true,
+              duration:10000
+            })
 
           HistoryService.insertQuiz({
             userId:this.user.id,
