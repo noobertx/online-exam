@@ -36,8 +36,13 @@
 	</div>
 </template>
 <script>
+  import Vue from 'vue'
+  import VueToast from 'vue-toast-notification';
+import 'vue-toast-notification/dist/index.css';
 	import QuizService from '../../QuizItemService'
   import HistoryService from '../../services/HistoryService'
+
+  Vue.use(VueToast);
 	export default{
 		data(){
     		return {
@@ -66,7 +71,11 @@
             if(this.quiz.settings.time){
               this.renderCountDownTimer(this.quiz.settings.time);
             }
-
+            Vue.$toast.success('Good Luck on your exam', {
+              position: 'top-right',
+              dismissible:true,
+              duration:10000
+            })
 
     		}catch(err){
       			this.error = err.message;
