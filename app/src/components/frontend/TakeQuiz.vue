@@ -37,6 +37,7 @@
 </template>
 <script>
 	import QuizService from '../../QuizItemService'
+  import HistoryService from '../../services/HistoryService'
 	export default{
 		data(){
     		return {
@@ -53,6 +54,9 @@
   		},
   		async created(){
     		try{
+            this.user = JSON.parse(localStorage.getItem('credentials'));
+            this.user.quizPaper=[];
+            this.user.score=0;
       			let quiz = await QuizService.getQuiz(this.$route.params.id);
       			this.quiz = quiz[0];
       			if(this.quiz.settings.isRandomize){
@@ -62,6 +66,7 @@
             if(this.quiz.settings.time){
               this.renderCountDownTimer(this.quiz.settings.time);
             }
+
 
     		}catch(err){
       			this.error = err.message;
@@ -160,7 +165,12 @@
   					})					
 				})
 
-				alert("Your Score:" + this.user.score);
+          HistoryService.insertQuiz({
+            userId:this.user.id,
+            examId:this.$route.params.id,
+            score:this.user.score,
+          });
+
   			}
   		},
 

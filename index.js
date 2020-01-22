@@ -21,6 +21,7 @@ app.use('/api/login',require('./routes/api/login'));
 app.use('/api/members',require('./routes/api/members'));
 app.use('/api/questions',require('./routes/api/questions'));
 app.use('/api/quizzes',require('./routes/api/quizzes'));
+app.use('/api/history',require('./routes/api/history'));
 
 
 //User Authentication

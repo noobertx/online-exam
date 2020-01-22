@@ -7,6 +7,7 @@ export const store = new Vuex.Store({
 		tokens:{
 			accessToken:"",
 			refreshToken:"",
+			id:"",
 			name:"",
 			mobile:"",
 			userType:"",
@@ -19,6 +20,7 @@ export const store = new Vuex.Store({
 		saveToken(state,params){
 			state.tokens.accessToken=params.accessToken;
 			state.tokens.refreshToken=params.refreshToken;
+			state.tokens.id=params.id;
 			state.tokens.name=params.name;
 			state.tokens.mobile=params.mobile;
 			state.tokens.userType=params.userType;
