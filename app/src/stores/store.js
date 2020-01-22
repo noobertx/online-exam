@@ -8,6 +8,10 @@ export const store = new Vuex.Store({
 			accessToken:"",
 			refreshToken:"",
 			name:"",
+			mobile:"",
+			userType:"",
+			gender:"",
+			college:"",
 			email:""
 		}
 	},
@@ -16,7 +20,11 @@ export const store = new Vuex.Store({
 			state.tokens.accessToken=params.accessToken;
 			state.tokens.refreshToken=params.refreshToken;
 			state.tokens.name=params.name;
-			state.tokens.email=params.email;
+			state.tokens.mobile=params.mobile;
+			state.tokens.userType=params.userType;
+			state.tokens.gender=params.gender;
+			state.tokens.name=params.name;
+			state.tokens.college=params.college;
 			localStorage.setItem('credentials', JSON.stringify(state.tokens));
 		},
 		loadTokens(state){

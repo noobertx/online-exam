@@ -12,26 +12,18 @@ const jwt = require("jsonwebtoken");
 let refreshTokens = []
 router.post('/',upload.none(),async (req,res)=>{	
 	const user = await getUser(req.body);
-	if(user[0]._id){
-
-		const accessToken =  generateAccessToken(user[0]);
-		const refreshToken =  jwt.sign(user[0],process.env.REFRESH_TOKEN_SECRET);
-		refreshTokens.push(refreshToken);
-
-		const members = await loadMembersCollection();
-		await members.updateOne({_id:ObjectId(user[0]._id)},{
-			$set:{				
-				refreshToken:refreshToken
-			}
-		})
-
-		
-		res.json({
-			accessToken:accessToken,
-			refreshToken:refreshToken,
-			name:user[0].name,
-			email:user[0].email});
-
+	if(user){
+		if(user[0]._id){		
+			const members = await loadMembersCollection();
+			res.json({			
+				name:user[0].name,
+				email:user[0].email,
+				mobile:user[0].mobile,
+				userType:user[0].userType,
+				gender:user[0].gender,
+				college:user[0].college
+			});
+		}
 	}else{
 		res.json({});				
 	}

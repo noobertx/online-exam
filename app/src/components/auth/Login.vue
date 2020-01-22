@@ -34,7 +34,7 @@
   			return {
   				user:{
   					email:"noobertx@gmail.com",
-  					password:"1234123",
+  					password:"123456",
   				},
           userdata:{
 
@@ -44,8 +44,8 @@
   		methods:{
   			async logInUser(){
           this.userdata = await LoginService.getLogin(this.user);
-          var context = this
-          this.$store.commit('saveToken',context.userdata);
+          // var context = this
+          this.$store.commit('saveToken',this.userdata);
   			}
   		}
   	}
