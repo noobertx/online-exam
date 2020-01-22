@@ -132,6 +132,19 @@
         </div>
         <input type="text" class="form-control" placeholder="password" v-model="quiz.settings.password" aria-describedby="time">
       </div>
+      <div class="input-group mb-3 pl-3 pr-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text">Attempt is Limited</span>
+        </div>
+        <input type="checkbox" class="form-control" placeholder="" v-model="quiz.settings.isAttemptLimited" aria-describedby="time" true-value="true"
+  false-value="">
+      </div>
+      <div class="input-group mb-3 pl-3 pr-3" v-if="quiz.settings.isAttemptLimited">
+        <div class="input-group-prepend">
+          <span class="input-group-text">Number of Attempts</span>
+        </div>
+        <input type="text" class="form-control"  v-model="quiz.settings.attempts" aria-describedby="time">
+      </div>
   
 
       <div class="input-group mb-3 pl-3 pr-3">
@@ -248,7 +261,9 @@ export default {
           isScheduled:"",
           schedule:new Date(),
           canExpire:"",
-          expirationDate:""
+          expirationDate:"",
+          isAttemptLimited:true,
+          attempts:1,
         },
         meta:{
           totalPoints:0
