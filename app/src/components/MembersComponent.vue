@@ -20,7 +20,7 @@
       v-bind:item="member" 
       v-bind:index="index" 
       v-bind:key="member._id">
-            <td><a :href="'#/member/'+member._id">{{member.name}}</a></td>           
+            <td><a :href="'#/profiles/'+member._id">{{member.name}}</a></td>           
             <td>{{member.email}}</td>
             <td>{{member.mobile}}</td>
             <td>{{member.college}}</td>
@@ -39,8 +39,8 @@ export default {
   data(){
     return {
       members:[],
-      filteredMembers:[],
       error:'',
+      filteredMembers:[],
       searchText:"",
       userdata:{
         name:'',
