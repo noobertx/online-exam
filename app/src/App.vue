@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <nprogress-container></nprogress-container>
     <div class="container">      
       <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="#">Online Exam</a>
@@ -38,9 +39,12 @@
 <script>
 // import MembersComponent from './components/MembersComponent.vue'
 // import QuestionsComponent from './components/QuestionsComponent.vue'
-
+import NprogressContainer from 'vue-nprogress/src/NprogressContainer'
 export default {
   name: 'app',
+  components: {
+    NprogressContainer
+  },
   methods:{
     isLoggedIn(){
 

@@ -1,6 +1,7 @@
 
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import NProgress from 'vue-nprogress'
 import App from './App.vue'
 import {store} from './stores/store'
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -12,7 +13,14 @@ import 'vue-toast-notification/dist/index.css';
 
 Vue.config.productionTip = false
 Vue.use(VueRouter)
+const options = {
+  latencyThreshold: 100, // Number of ms before progressbar starts showing, default: 100,
+  router: true, // Show progressbar when navigating routes, default: true
+  http: false // Show progressbar when doing Vue.http, default: true
+};
+Vue.use(NProgress, options)
 
+const nprogress = new NProgress({ parent: '.nprogress-container' })
 
 
 const routes = [
@@ -85,6 +93,7 @@ const router = new VueRouter({
 
 new Vue({
 	router,
+  nprogress,
   store: store,
   render: h => h(App),
 }).$mount('#app')
