@@ -119,6 +119,7 @@
         </div>
         <input type="checkbox" class="form-control" placeholder="" v-model="quiz.settings.isRandomize" aria-describedby="time">
       </div>
+
       <div class="input-group mb-3 pl-3 pr-3">
         <div class="input-group-prepend">
           <span class="input-group-text">Password Protected</span>
@@ -131,6 +132,35 @@
         </div>
         <input type="text" class="form-control" placeholder="password" v-model="quiz.settings.password" aria-describedby="time">
       </div>
+  
+
+      <div class="input-group mb-3 pl-3 pr-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text">Scheduled</span>
+        </div>
+        <input type="checkbox" class="form-control" placeholder="" v-model="quiz.settings.isScheduled" aria-describedby="time">
+      </div>
+      <div class="input-group mb-3 pl-3 pr-3" v-if="quiz.settings.isScheduled">
+        <div class="input-group-prepend">
+          <span class="input-group-text">Date</span>
+        </div>
+        <date-picker v-model="quiz.settings.schedule" type="datetime"></date-picker>
+      </div>
+
+      <div class="input-group mb-3 pl-3 pr-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text">Can Expire</span>
+        </div>
+        <input type="checkbox" class="form-control" placeholder="" v-model="quiz.settings.canExpire" aria-describedby="time">
+
+      </div>
+      <div class="input-group mb-3 pl-3 pr-3" v-if="quiz.settings.canExpire">
+        <div class="input-group-prepend">
+          <span class="input-group-text">Date</span>
+        </div>
+        <date-picker v-model="quiz.settings.expirationDate" type="datetime"></date-picker>
+      </div>
+
 
       <div class="input-group mb-3 pl-3 pr-3">
         <div class="input-group-prepend">
@@ -144,6 +174,8 @@
         </div>
         <input type="number" disabled readonly class="form-control" aria-describedby="totalItems" :value="getTotalItems">
       </div>
+
+
       
       <div class="pl-3 pr-3 text-center">
         <button class="btn btn-primary btn-block" @click="saveQuiz">Save</button>        
@@ -187,11 +219,14 @@
 
 <script>
   import QuizService from '../QuizItemService'
+  import DatePicker from 'vue2-datepicker';
+  import 'vue2-datepicker/index.css';
   import $ from 'jquery'
   const uuid = require('uuid');
 
 export default {
   name: 'QuizzesComponent',
+  components: { DatePicker },
   data(){
     return {
       quiz:{
@@ -208,7 +243,12 @@ export default {
           time:30,
           isRandomize:"",
           isPasswordProtected:"",
-          password:""
+          password:"",
+
+          isScheduled:"",
+          schedule:new Date(),
+          canExpire:"",
+          expirationDate:""
         },
         meta:{
           totalPoints:0

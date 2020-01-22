@@ -45,6 +45,7 @@ router.post('/', upload.none(),async (req,res)=>{
 
 router.put('/:id',upload.none(),async (req,res)=>{	
 	const quizzes = await loadQuizzesCollection();
+	console.log(req.body);
 		await quizzes.updateOne({_id:ObjectId(req.body.quizData._id)},{
 			$set:{				
 				title:req.body.quizData.title,
