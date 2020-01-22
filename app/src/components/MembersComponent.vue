@@ -2,7 +2,7 @@
   <div class="container">
     <h1>Quizzes</h1>
     <router-link  to="/members/add" class="btn btn-primary mb-3">Add new Member</router-link>   
-
+    <input type="text" class="form-control" v-model="searchText" @input="filterMembersInput" placeholder="Search for a user">
     <p class="error" v-if="error">{{error}}</p>
     <div class="members-container">
 
@@ -16,7 +16,7 @@
           </tr>
         </thead>
         <tbody>          
-          <tr v-for="(member,index) in members" 
+          <tr v-for="(member,index) in filteredMembers" 
       v-bind:item="member" 
       v-bind:index="index" 
       v-bind:key="member._id">
@@ -39,7 +39,9 @@ export default {
   data(){
     return {
       members:[],
+      filteredMembers:[],
       error:'',
+      searchText:"",
       userdata:{
         name:'',
         password:'',
@@ -55,6 +57,7 @@ export default {
   async created(){
     try{
       this.members = await MemberService.getMembers();
+      this.filteredMembers = this.members;
     }catch(err){
       this.error = err.message;
     }
@@ -89,8 +92,18 @@ export default {
         email:'',
         mobile:'',
       } 
-    },
- 
+    }, 
+  },
+  computed:{
+     filterMembersInput(){
+       if(this.searchText!=""){        
+          this.filteredMembers = this.members.filter(function(member){
+            return member.name.toLowerCase().includes(this.searchText.toLowerCase())
+          },this)
+       }else{
+        this.filteredMembers = this.members;
+       }
+    }
   }
 }
 </script>

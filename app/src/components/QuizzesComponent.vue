@@ -1,7 +1,8 @@
 <template>
   <div>
     <h1>Quizzes</h1>
-    <router-link  to="/quizzes/add" class="btn btn-primary mb-3">Add new Quiz</router-link>      
+    <router-link  to="/quizzes/add" class="btn btn-primary mb-3">Add new Quiz</router-link>    
+    <input type="text" class="form-control" v-model="searchText" @input="filterQuizInput" placeholder="Search for quiz">  
     <p class="error" v-if="error">{{error}}</p>
     <div class="quiz-container">
 
@@ -16,7 +17,7 @@
           </tr>
         </thead>
         <tbody>          
-          <tr v-for="(quiz,index) in quizzes" 
+          <tr v-for="(quiz,index) in filteredQuizzes" 
           v-bind:item="quiz" 
           v-bind:index="index" 
           v-bind:key="quiz._id">
@@ -28,6 +29,7 @@
             <td v-else></td>
             <td v-if="quiz.meta">{{quiz.meta.total}}</td>
             <td v-else></td>
+            <td><a href="#" class="btn btn-sm btn-danger" title="Remove Quiz" @click="deleteQuiz(quiz._id)">x</a></td>
           </tr>
         </tbody>
       </table>
@@ -45,6 +47,8 @@ export default {
     return {
       quizzes:[],
       error:'',
+      filteredQuizzes:[],
+      searchText:"",
       quizdata:{
         title:'',
         items:0,
@@ -59,6 +63,7 @@ export default {
   async created(){
     try{
       this.quizzes = await QuizService.getQuizzes();
+      this.filteredQuizzes = this.quizzes;
     }catch(err){
       this.error = err.message;
     }
@@ -83,6 +88,19 @@ export default {
       this.quizdata = quiz;
       // console.log(this.quizdata);
     },
+  },
+  computed:{
+     filterQuizInput(){
+       if(this.searchText!=""){  
+
+          this.filteredQuizzes = this.quizzes.filter(function(quiz){
+            console.log(quiz.title);
+            return quiz.title.toLowerCase().includes(this.searchText.toLowerCase())
+          },this)
+       }else{
+        this.filteredQuizzes = this.quizzes;
+       }
+    }
   }
 }
 </script>
