@@ -29,7 +29,10 @@
             <td v-else></td>
             <td v-if="quiz.meta">{{quiz.meta.total}}</td>
             <td v-else></td>
-            <td><a href="#" class="btn btn-sm btn-danger" title="Remove Quiz" @click="deleteQuiz(quiz._id)">x</a></td>
+            <td>
+              <a href="#" class="btn btn-sm btn-warning" title="Clone Quiz" @click="cloneQuiz(quiz)">[]</a>
+              <a href="#" class="btn btn-sm btn-danger" title="Remove Quiz" @click="deleteQuiz(quiz._id)">x</a>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -82,6 +85,31 @@ export default {
       await QuizService.deleteQuiz(id);
       this.quizzes = await QuizService.getQuizzes();
       this.mode="create";
+    },
+    async cloneQuiz(quiz){
+      var q = quiz;
+      delete(q["_id"]);
+      q.title += " (Clone)";
+
+      var cloned = {
+        quizzes:[],
+        error:'',
+        filteredQuizzes:[],
+        searchText:"",
+        quizData:{
+          title:q.title,
+          items:q.items,
+          wrong:q.wrong,
+          time:q.time,
+          intro:q.intro,
+          tag:q.tag,
+        },
+        quizItems:q.quizItems,
+        settings:q.settings,
+        meta:q.meta,
+        date:new Date(),
+      }
+      await QuizService.insertQuiz(cloned);
     },
     editQuiz(quiz){
       this.mode="edit";
