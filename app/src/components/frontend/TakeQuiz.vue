@@ -1,6 +1,6 @@
 <template>
 	<div class="container">
-
+    <div v-if="canDisplay">
     <h1>{{quiz.title}}</h1>
     <p>{{quiz.description}}</p>
     <p class="small">{{timer}}</p>
@@ -31,8 +31,16 @@
 
 			</div>			
 		</div>
-		<button class="btn btn-success btn-block" @click="checkResults">Submit</button>
+		<button class="btn btn-success btn-block" @click="checkResults" v-if="canDisplay">Submit</button>
+    </div>
+    <div v-else>
+      <div v-for="(item,index) in status" class="text-center">        
+        <h2 class="">{{status[index]}}</h2>
+        <h3 class=" text-error ">{{message[index]}}</h3>
+        <router-link  to="/quiz-listings" class="btn btn-success">Return</router-link>
 
+      </div>
+    </div>
 	</div>
 </template>
 <script>
@@ -52,31 +60,56 @@ import 'vue-toast-notification/dist/index.css';
     		  	quizPaper:[],
     		  	score:0
     		  },
+          canDisplay:true,
+          status:[],
+          message:[],
     		  quiz:[],
           timer: "",
           date: new Date()
     		}
   		},
   		async created(){
+
+       
+
     		try{
             this.user = JSON.parse(localStorage.getItem('credentials'));
             this.user.quizPaper=[];
             this.user.score=0;
-      			let quiz = await QuizService.getQuiz(this.$route.params.id);
-      			this.quiz = quiz[0];
-      			if(this.quiz.settings.isRandomize){
-      				this.quiz.quizItems = this.shuffle(this.quiz.quizItems ) ;
-      			}
-      			this.generateQuizPaper(this.quiz.quizItems);
-            if(this.quiz.settings.time){
-              this.renderCountDownTimer(this.quiz.settings.time);
-            }
-            Vue.$toast.success('Good Luck on your exam', {
-              position: 'top-right',
-              dismissible:true,
-              duration:10000
-            })
+      			 let quiz = await QuizService.getQuiz(this.$route.params.id);
 
+            
+
+                         
+      			 this.quiz = quiz[0];
+      			 if(this.quiz.settings.isRandomize){
+      			 	this.quiz.quizItems = this.shuffle(this.quiz.quizItems ) ;
+      			 }
+      			 this.generateQuizPaper(this.quiz.quizItems);
+              if(this.quiz.settings.time){
+                this.renderCountDownTimer(this.quiz.settings.time);
+              }
+
+
+              if(!this.isInSchedule()){
+                this.canDisplay=false;
+                this.status.push("Forbidden")
+                this.message.push("This item is currently unavailable")
+              }
+
+              if(this.isExpired()){
+                this.canDisplay=false;
+                this.status.push("Forbidden")
+                this.message.push("This item is expired");               
+              }
+              
+              if(this.canDisplay){
+                Vue.$toast.success('Good Luck on your exam', {
+                  position: 'top-right',
+                  dismissible:true,
+                  duration:10000
+                })
+              }
     		}catch(err){
       			this.error = err.message;
 
@@ -105,6 +138,26 @@ import 'vue-toast-notification/dist/index.css';
 				
   				return array;
 			},
+      isExpired(){      
+        if(this.quiz.settings.canExpire){
+          var expiration = this.quiz.settings.expirationDate.replace("T"," ");
+          expiration = expiration.replace("Z"," ");
+          expiration = new Date(expiration);           
+          var dateNow = new Date();     
+
+          return (expiration < dateNow) ? true : false;
+        }
+      },
+      isInSchedule(){
+        if(this.quiz.settings.isScheduled){
+          var schedule = this.quiz.settings.schedule.replace("T"," ");
+          schedule = schedule.replace("Z"," ");
+          schedule = new Date(schedule);           
+          var dateNow = new Date();           
+          return (schedule < dateNow) ? true : false;
+        }
+        return true;
+      },
 			generateQuizPaper(collection){
 				 this.user.quizPaper = collection.map((i)=>{
 					return {
