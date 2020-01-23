@@ -169,7 +169,6 @@ import 'vue-toast-notification/dist/index.css';
 			test(index){
         if(this.quiz.quizItems[index].type=="multiple-choice"){
           var max = this.quiz.quizItems[index].correctAnswer.length;
-          console.log(max+" <= "+this.user.quizPaper[index].answer.length)
           if(max<=this.user.quizPaper[index].answer.length){
              Vue.$toast.success('Your Have selected More than '+this.quiz.quizItems[index].correctAnswer.length+"answers ", {
               position: 'top-right',
@@ -180,7 +179,6 @@ import 'vue-toast-notification/dist/index.css';
             this.user.quizPaper[index].answer.splice(2,1);
           }
         }
-        console.log(this.quiz.quizItems[index]);
   		},
 
       renderCountDownTimer(time){
@@ -212,6 +210,7 @@ import 'vue-toast-notification/dist/index.css';
   		checkResults(){
   				var context = this;
   				this.user.score = 0 ;
+          this.user.overall = 0 ;
   				this.user.quizPaper.forEach((i)=>{
   					context.quiz.quizItems.forEach((q)=>{
   						if(i.question==q.question){
@@ -225,40 +224,56 @@ import 'vue-toast-notification/dist/index.css';
                       if(i.answer.indexOf(answer)!=-1){
                         if(q.isPerCorrectAnswer=="false"){
                           context.user.score += score;
+
                         }else{
-                          context.user.score += parseInt(points);                          
+                          context.user.score += parseFloat(points);                          
                         }
                       }
+
+                      if(q.isPerCorrectAnswer=="false"){
+                        context.user.overall += parseFloat(score)
+                      }else{
+                        context.user.overall += parseFloat(q.points)                     
+                      }
                     })
+
+                   
+
 
                   }else if(q.type=="fill-in-the-blanks"){
                     if(i.answer.length>0){                      
                     var userAnswer = i.answer.replace(/\s/g,"").toLowerCase();
                     var examAnswer = q.correctAnswer.replace(/\s/g,"").toLowerCase();
                       if(userAnswer==examAnswer){
-                        context.user.score += parseInt(q.points);
+                        context.user.score += parseFloat(q.points);
                       }
                     }
+                     this.user.overall += parseFloat(q.points)
                   }else{                   
       							if(i.answer==q.correctAnswer){
-  	     							context.user.score += parseInt(q.points);
+  	     							context.user.score += parseFloat(q.points);
   			     				}
+                     this.user.overall += parseFloat(q.points)
                   }
+      
+             
   						}
   					})					
 				})
 
-          Vue.$toast.success('Your Score is '+this.user.score, {
+          var scoreRating = ((this.user.score/this.user.overall)*100);
+
+          Vue.$toast.success('Your Score is '+ scoreRating.toFixed(2) +" % ", {
               position: 'top-right',
               dismissible:true,
               duration:10000
             })
 
-          // HistoryService.insertQuiz({
-          //   userId:this.user.id,
-          //   examId:this.$route.params.id,
-          //   score:this.user.score,
-          // });
+          HistoryService.insertQuiz({
+            userId:this.user.id,
+            examId:this.$route.params.id,
+            score:scoreRating.toFixed(2),
+          });
 
   			}
   		},
