@@ -53,6 +53,12 @@
               <div class="mb-3">
                 <button class="btn btn-success" @click="addChoice">Add Choices</button>
               </div>
+              
+              <div class="form-group" v-if="quiz.quizItems[currentIndex].type=='multiple-choice'">
+                <label for="question"><input type="checkbox" placeholder="" v-model="quiz.quizItems[currentIndex].isPerCorrectAnswer" true-value="true"
+  false-value="false"> Add Score Per Correct Item</label>
+              </div>
+
               <div v-if="quiz.quizItems[currentIndex].options.length>0">
                 <label >Choices</label>
 
@@ -309,6 +315,7 @@ export default {
         type:"single-choice-r",
         question:"Choose Yes",
         points:1,
+        isPerCorrectAnswer:"",
         options:[{
           cid:uuid.v4(),
           text:"Yes"

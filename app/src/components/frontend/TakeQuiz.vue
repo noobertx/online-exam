@@ -170,7 +170,11 @@ import 'vue-toast-notification/dist/index.css';
 
                     q.correctAnswer.forEach(function(answer){
                       if(i.answer.indexOf(answer)!=-1){
-                        context.user.score += score;
+                        if(q.isPerCorrectAnswer=="false"){
+                          context.user.score += score;
+                        }else{
+                          context.user.score += parseInt(points);                          
+                        }
                       }
                     })
 
@@ -197,11 +201,11 @@ import 'vue-toast-notification/dist/index.css';
               duration:10000
             })
 
-          HistoryService.insertQuiz({
-            userId:this.user.id,
-            examId:this.$route.params.id,
-            score:this.user.score,
-          });
+          // HistoryService.insertQuiz({
+          //   userId:this.user.id,
+          //   examId:this.$route.params.id,
+          //   score:this.user.score,
+          // });
 
   			}
   		},
