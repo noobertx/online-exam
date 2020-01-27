@@ -33,7 +33,7 @@
   		data(){  
   			return {
   				user:{
-  					email:"noobertx@gmail.com",
+  					email:"songoku@email.com",
   					password:"123456",
   				},
           userdata:{
@@ -43,8 +43,7 @@
   		},
   		methods:{
   			async logInUser(){
-          this.userdata = await LoginService.getLogin(this.user);
-          // var context = this
+          this.userdata = await LoginService.getLogin(this.user);          
           this.$store.commit('saveToken',this.userdata);
   			}
   		}

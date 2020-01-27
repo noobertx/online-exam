@@ -12,8 +12,7 @@ const jwt = require("jsonwebtoken");
 let refreshTokens = []
 router.post('/',upload.none(),async (req,res)=>{	
 	const user = await getUser(req.body);
-	if(user){
-		if(user[0]._id){		
+	if(user){	
 			const members = await loadMembersCollection();
 			res.json({			
 				id:user[0]._id,
@@ -24,7 +23,6 @@ router.post('/',upload.none(),async (req,res)=>{
 				gender:user[0].gender,
 				college:user[0].college
 			});
-		}
 	}else{
 		res.json({});				
 	}
