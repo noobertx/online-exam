@@ -12,6 +12,7 @@ const jwt = require("jsonwebtoken");
 let refreshTokens = []
 router.post('/',upload.none(),async (req,res)=>{	
 	const user = await getUser(req.body);
+	console.log(req.body);
 	if(user){	
 			const members = await loadMembersCollection();
 			res.json({			
