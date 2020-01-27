@@ -1,54 +1,44 @@
 <template>
 	<div>
-		<h1>{{member.name}} Member Profile</h1>
-    <p>User Type: {{member.userType}}</p>
-    <p>Email Address: {{member.email}}</p>
-    <p>College: {{member.college}}</p>
-    <p>Mobile: {{member.mobile}}</p>
+		<h1>{{name}} Member Profile</h1>
+    <p>User Type: {{userType}}</p>
+    <p>Email Address: {{email}}</p>
+    <p>College: {{college}}</p>
+    <p>Mobile: {{mobile}}</p>
 
 	</div>
 </template>
 <script>
-	import MemberService from '../MemberService'
-
+  import { mapState, mapActions } from 'vuex'
 	export default{
 		name: 'MemberItemComponent',
 		data(){
-			return{
-				member:{
-					name:"",
-					userType:0,
-					gender:"F",
-					college:"UC",
-					email:"lorem-sr@example.com",
-					mobile:"44444",
-					password:"123123",
-					refreshToken:"",
-				}
+			return{				
+          name:"",
+          userType:0,
+          gender:"F",
+          college:"UC",
+          email:"lorem-sr@example.com",
+          mobile:"44444",
+          password:"123123",
+          refreshToken:"",
 			}
 		},
-    mounted(){
-          this.member = JSON.parse(localStorage.getItem("credentials")).user ;
-          console.log(this.member);
-      try{
-      	// 		if(this.$route.params.id){
-    			// 	let member = await MemberService.getMember(this.$route.params.id);    
-    			// 	this.member = member[0];
-    			// }      
-    		}catch(err){
-      			this.error = err.message;
-    		}
-		},
-		methods:{
-			async saveMember(){
+    created(){
+      this.name = this.$store.state.account.user.name;
+      this.userType = this.$store.state.account.user.userType;
+      this.gender = this.$store.state.account.user.gender;
+      this.college = this.$store.state.account.user.college;
+      this.email = this.$store.state.account.user.email;
+      this.mobile = this.$store.state.account.user.mobile;
+      this.refreshToken = this.$store.state.account.user.refreshToken;
+    },
 
-    		  if(this.$route.params.id!="add"){        
-    		    await MemberService.updateMember(this.$route.params.id,this.member);
-    		  }else{
-    		    var _id = await MemberService.insertMember(this.member);
-    		    location.hash="#/members/"+_id.data		
-    		  }
-    		},
+    computed:{
+       ...mapState('account',['user'])
+    },
+		methods:{
+		
 		}
 	}
 </script>
