@@ -8,19 +8,17 @@
 				<h2 class="card-text text-center">
 					Login your account
 				</h2>
-        <form @submit.prevent="handleSubmit">
 				<div class="form-group">
     				<label for="email">Email</label>
-    				<input type="text" name="email" id="email" class="form-control" v-model="email">
+    				<input type="text" name="email" id="email" class="form-control" v-model="user.email">
   				</div>
   				<div class="form-group">
     				<label for="password">Password</label>
-    				<input type="password" name="password" id="password" class="form-control" v-model="password">
+    				<input type="password" name="password" id="password" class="form-control" v-model="user.password">
   				</div>
   				<div class="form-group">
-            <button class="btn btn-primary btn-block" :disabled="status.loggingIn">Login</button>
+  					<button class="btn btn-success btn-block" @click="logInUser">Log In</button>
   				</div>
-        </form>
 			</div>
 		</div>
 		</div>
@@ -29,32 +27,25 @@
 	</div>
 </template>
 <script>
-  import { mapState, mapActions } from 'vuex'
-
+    import LoginService from '../../services/LoginService'
 	export default {
   		name: 'Login',
   		data(){  
   			return {
-            email: 'komalpd2011@gmail.com',
-            password: 'e10adc3949ba59abbe56e057f20f883e',
-            submitted: false
-        }		  			
+  				user:{
+  					email:"songoku@email.com",
+  					password:"123456",
+  				},
+          userdata:{
+
+          }
+  			}			  			
   		},
-      computed:{
-        ...mapState('account', ['status'])
-      },
-      created(){
-         this.logout();
-      },
   		methods:{
-  			...mapActions('account', ['login', 'logout']),
-        handleSubmit (e) {
-            this.submitted = true;
-            const { email, password } = this;
-            if (email && password) {
-                this.login({ email, password })
-            }
-        }
+  			async logInUser(){
+          this.userdata = await LoginService.getLogin(this.user);          
+          this.$store.commit('saveToken',this.userdata);
+  			}
   		}
   	}
 </script>

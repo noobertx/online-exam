@@ -52,7 +52,7 @@ export default {
     }
   },
   async created(){
-    // this.$store.commit('loadTokens');
+    this.$store.commit('loadTokens');
   },
 
   mounted(){
