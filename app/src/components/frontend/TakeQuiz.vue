@@ -1,11 +1,11 @@
 <template>
 	<div class="container">
-    <div v-if="canDisplay">
-    <h1>{{quiz.title}}</h1>
-    <p>{{quiz.description}}</p>
+    <div v-if="canDisplay" >
+    <h1 class="text-center">{{quiz.title}}</h1>
+    <p class="text-center">{{quiz.description}}</p>
     <p class="small">{{timer}}</p>
     
-    <div id="clockdiv"></div>
+
 
 		<div class="row" v-for="(item,index) in quiz.quizItems">
 			<div class="col-md-12">
@@ -70,18 +70,20 @@ import 'vue-toast-notification/dist/index.css';
   		},
   		async created(){
 
-       
-
-    		try{
-            this.user = JSON.parse(localStorage.getItem('credentials'));
+      			 let quiz = await QuizService.getQuiz(this.$route.params.id);
+             this.user = JSON.parse(localStorage.getItem('user'));
             this.user.quizPaper=[];
             this.user.score=0;
-      			 let quiz = await QuizService.getQuiz(this.$route.params.id);
 
             
 
                          
-      			 this.quiz = quiz[0];
+             this.quiz = quiz[0];
+            console.log(this.quiz);
+
+    		try{
+
+
       			 if(this.quiz.settings.isRandomize){
       			 	this.quiz.quizItems = this.shuffle(this.quiz.quizItems ) ;
       			 }
