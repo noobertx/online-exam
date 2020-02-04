@@ -10,23 +10,23 @@
             </button>
           </div>
           <div class="modal-body">
-            <div v-if="quiz.quizItems.length>0">              
+            <div v-if="quizItems.length>0">              
              <div class="form-group">
                 <label for="question">Question</label>
                 <textarea name="question" class="form-control"
                 id="question" 
                 cols="30" 
-                v-model="quiz.quizItems[currentIndex].question"></textarea>
+                v-model="quizItems[currentIndex].question"></textarea>
               </div>
               <div class="form-group">
                 <label for="points">Points</label>
                 <input type="number" class="form-control" 
                 id="points" placeholder="2" 
-                v-model="quiz.quizItems[currentIndex].points">
+                v-model="quizItems[currentIndex].points">
               </div>
               <div class="form-group">
                 <label for="question_type">Type</label>
-                <select name="question_type" class="form-control" id="question_type" v-model="quiz.quizItems[currentIndex].type">
+                <select name="question_type" class="form-control" id="question_type" v-model="quizItems[currentIndex].type">
                   <option value="" disabled selected></option>
                   <option v-for="choice in [{
                     value:'single-choice-r',
@@ -46,24 +46,24 @@
                   }]" :value="choice.value">{{choice.text}}</option>
                 </select>                
               </div>
-              <div v-if="quiz.quizItems[currentIndex].type=='fill-in-the-blanks'">
-                <input type="text" class="form-control" v-model="quiz.quizItems[currentIndex].correctAnswer">
+              <div v-if="quizItems[currentIndex].type=='fill-in-the-blanks'">
+                <input type="text" class="form-control" v-model="quizItems[currentIndex].correctAnswer">
               </div>
             <div v-else>
               <div class="mb-3">
                 <button class="btn btn-success" @click="addChoice">Add Choices</button>
               </div>
               
-              <div class="form-group" v-if="quiz.quizItems[currentIndex].type=='multiple-choice'">
-                <label for="question"><input type="checkbox" placeholder="" v-model="quiz.quizItems[currentIndex].isPerCorrectAnswer" true-value="true"
+              <div class="form-group" v-if="quizItems[currentIndex].type=='multiple-choice'">
+                <label for="question"><input type="checkbox" placeholder="" v-model="quizItems[currentIndex].isPerCorrectAnswer" true-value="true"
   false-value="false"> Add Score Per Correct Item</label>
               </div>
 
-              <div v-if="quiz.quizItems[currentIndex].options.length>0">
+              <div v-if="quizItems[currentIndex].options.length>0">
                 <label >Choices</label>
 
-                <div class="input-group mb-3" v-for="(value,  index) in quiz.quizItems[currentIndex].options">
-  <input type="text" class="form-control" placeholder="Input Choice Detail" aria-label="Input Choice Detail" aria-describedby="basic-addon2" v-model="quiz.quizItems[currentIndex].options[index].text">
+                <div class="input-group mb-3" v-for="(value,  index) in quizItems[currentIndex].options">
+  <input type="text" class="form-control" placeholder="Input Choice Detail" aria-label="Input Choice Detail" aria-describedby="basic-addon2" v-model="quizItems[currentIndex].options[index].text">
   <div class="input-group-append">
     <button class="btn btn-outline-secondary" type="button" @click="removeAnswer(index)">&times;</button>
   </div>
@@ -71,13 +71,13 @@
               </div>
               <div class="form-group">
                 <label for="answer">Answer</label>
-                  <select v-if="isMultipleAnswer(quiz.quizItems[currentIndex].type)" class="form-control" id="answer" v-model="quiz.quizItems[currentIndex].correctAnswer" multiple>
+                  <select v-if="isMultipleAnswer(quizItems[currentIndex].type)" class="form-control" id="answer" v-model="quizItems[currentIndex].correctAnswer" multiple>
                     <option value="" selected disabled></option>
-                    <option v-for="option in quiz.quizItems[currentIndex].options" v-bind:value="option.cid">{{ option.text }}</option>
+                    <option v-for="option in quizItems[currentIndex].options" v-bind:value="option.cid">{{ option.text }}</option>
                   </select>
-                  <select v-else class="form-control" id="answer" v-model="quiz.quizItems[currentIndex].correctAnswer" >
+                  <select v-else class="form-control" id="answer" v-model="quizItems[currentIndex].correctAnswer" >
                     <option value="" selected disabled></option>
-                    <option v-for="option in quiz.quizItems[currentIndex].options" v-bind:value="option.cid">{{ option.text }}</option>
+                    <option v-for="option in quizItems[currentIndex].options" v-bind:value="option.cid">{{ option.text }}</option>
                   </select>
               </div>
               </div>
@@ -97,14 +97,14 @@
         <div class="input-group-prepend">
           <span class="input-group-text" id="title">Quiz Title</span>
         </div>
-        <input type="text" class="form-control" placeholder="Title" aria-label="Title" aria-describedby="title" v-model="quiz.quizData.title">
+        <input type="text" class="form-control" placeholder="Title" aria-label="Title" aria-describedby="title" v-model="title">
       </div>
 
       <div class="input-group mb-3 pl-3 pr-3">
         <div class="input-group-prepend">
           <span class="input-group-text" id="intro">Description</span>
         </div>
-        <input type="text" class="form-control" placeholder="Description" aria-label="Description" aria-describedby="intro" v-model="quiz.quizData.intro">
+        <input type="text" class="form-control" placeholder="Description" aria-label="Description" aria-describedby="intro" v-model="intro">
       </div>
 
      
@@ -114,7 +114,7 @@
         <div class="input-group-prepend">
           <span class="input-group-text">Time Limit</span>
         </div>
-        <input type="number" class="form-control" placeholder="30000" aria-label="30000" v-model="quiz.settings.time" aria-describedby="time">
+        <input type="number" class="form-control" placeholder="30000" aria-label="30000" v-model="settings.time" aria-describedby="time">
         <div class="input-group-append">
           <span class="input-group-text" id="time">minutes</span>
         </div>
@@ -123,33 +123,33 @@
         <div class="input-group-prepend">
           <span class="input-group-text">Randomize Items</span>
         </div>
-        <input type="checkbox" class="form-control" placeholder="" v-model="quiz.settings.isRandomize" aria-describedby="time">
+        <input type="checkbox" class="form-control" placeholder="" v-model="settings.isRandomize" aria-describedby="time">
       </div>
 
       <div class="input-group mb-3 pl-3 pr-3">
         <div class="input-group-prepend">
           <span class="input-group-text">Password Protected</span>
         </div>
-        <input type="checkbox" class="form-control" placeholder="" v-model="quiz.settings.isPasswordProtected" aria-describedby="time">
+        <input type="checkbox" class="form-control" placeholder="" v-model="settings.isPasswordProtected" aria-describedby="time">
       </div>
-      <div class="input-group mb-3 pl-3 pr-3" v-if="quiz.settings.isPasswordProtected">
+      <div class="input-group mb-3 pl-3 pr-3" v-if="settings.isPasswordProtected">
         <div class="input-group-prepend">
           <span class="input-group-text">Password</span>
         </div>
-        <input type="text" class="form-control" placeholder="password" v-model="quiz.settings.password" aria-describedby="time">
+        <input type="text" class="form-control" placeholder="password" v-model="settings.password" aria-describedby="time">
       </div>
       <div class="input-group mb-3 pl-3 pr-3">
         <div class="input-group-prepend">
           <span class="input-group-text">Attempt is Limited</span>
         </div>
-        <input type="checkbox" class="form-control" placeholder="" v-model="quiz.settings.isAttemptLimited" aria-describedby="time" true-value="true"
+        <input type="checkbox" class="form-control" placeholder="" v-model="settings.isAttemptLimited" aria-describedby="time" true-value="true"
   false-value="">
       </div>
-      <div class="input-group mb-3 pl-3 pr-3" v-if="quiz.settings.isAttemptLimited">
+      <div class="input-group mb-3 pl-3 pr-3" v-if="settings.isAttemptLimited">
         <div class="input-group-prepend">
           <span class="input-group-text">Number of Attempts</span>
         </div>
-        <input type="text" class="form-control"  v-model="quiz.settings.attempts" aria-describedby="time">
+        <input type="text" class="form-control"  v-model="settings.attempts" aria-describedby="time">
       </div>
   
 
@@ -157,27 +157,27 @@
         <div class="input-group-prepend">
           <span class="input-group-text">Scheduled</span>
         </div>
-        <input type="checkbox" class="form-control" placeholder="" v-model="quiz.settings.isScheduled" aria-describedby="time">
+        <input type="checkbox" class="form-control" placeholder="" v-model="settings.isScheduled" aria-describedby="time">
       </div>
-      <div class="input-group mb-3 pl-3 pr-3" v-if="quiz.settings.isScheduled">
+      <div class="input-group mb-3 pl-3 pr-3" v-if="settings.isScheduled">
         <div class="input-group-prepend">
           <span class="input-group-text">Date</span>
         </div>
-        <date-picker v-model="quiz.settings.schedule" type="datetime"></date-picker>
+        <date-picker v-model="settings.schedule" type="datetime"></date-picker>
       </div>
 
       <div class="input-group mb-3 pl-3 pr-3">
         <div class="input-group-prepend">
           <span class="input-group-text">Can Expire</span>
         </div>
-        <input type="checkbox" class="form-control" placeholder="" v-model="quiz.settings.canExpire" aria-describedby="time">
+        <input type="checkbox" class="form-control" placeholder="" v-model="settings.canExpire" aria-describedby="time">
 
       </div>
-      <div class="input-group mb-3 pl-3 pr-3" v-if="quiz.settings.canExpire">
+      <div class="input-group mb-3 pl-3 pr-3" v-if="settings.canExpire">
         <div class="input-group-prepend">
           <span class="input-group-text">Date</span>
         </div>
-        <date-picker v-model="quiz.settings.expirationDate" type="datetime"></date-picker>
+        <date-picker v-model="settings.expirationDate" type="datetime"></date-picker>
       </div>
 
 
@@ -214,8 +214,8 @@
     </nav>
 
      <div class="row" style="clear:both;">&nbsp;</div>
-        <div class="quiz-items mt-4" v-if="quiz.quizItems.length>0"  style="clear:both;">              
-          <div class="row"  v-for="(item,  index) in quiz.quizItems">
+        <div class="quiz-items mt-4" v-if="quizItems.length>0"  style="clear:both;">              
+          <div class="row"  v-for="(item,  index) in quizItems">
             <div class="col-sm-10 ml-3">
               <p>
                  {{index+1}} . {{item.question}} <br>
@@ -248,17 +248,11 @@ export default {
   components: { DatePicker },
   data(){
     return {
-      quiz:{
-        quizData:{
-        title:'New Created Quiz',
-        items:0,
-        total:0,
-        wrong:0,        
-        intro:'Lorem Ipsume this is an easy quiz',
-        tag:'',
-        },
-        quizItems:[],
-        settings:{
+      title:'New Created Quiz',
+      intro:'Lorem Ipsume this is an easy quiz',
+      tag:'',
+      quizItems:[],
+      settings:{
           time:30,
           isRandomize:"",
           isPasswordProtected:"",
@@ -271,33 +265,32 @@ export default {
           isAttemptLimited:true,
           attempts:1,
         },
-        meta:{
+      meta:{
           totalPoints:0
-        },
-      },     
+      },    
       error:'',
       currentIndex:0,
       mode:"create"
     }
   },
-  async created(){
+  created(){
 
-    try{
-      if(this.$route.params.id){
+    // try{
+    //   if(this.$route.params.id){
 
-      let quiz = await QuizService.getQuiz(this.$route.params.id);
-      this.quiz.quizData = quiz[0];
-      this.quiz.quizItems = quiz[0].quizItems;
-      this.quiz.settings = quiz[0].settings;
-      this.quiz.meta = quiz[0].meta || {};
+    //   let quiz = await QuizService.getQuiz(this.$route.params.id);
+    //   this.quiz.quizData = quiz[0];
+    //   this.quiz.quizItems = quiz[0].quizItems;
+    //   this.quiz.settings = quiz[0].settings;
+    //   this.quiz.meta = quiz[0].meta || {};
 
-      this.quiz.meta.total = 0;
-      this.quiz.meta.items = 0;
-      }
-      // console.log(quiz[0].quizItems);
-    }catch(err){
-      this.error = err.message;
-    }
+    //   this.quiz.meta.total = 0;
+    //   this.quiz.meta.items = 0;
+    //   }
+    //   // console.log(quiz[0].quizItems);
+    // }catch(err){
+    //   this.error = err.message;
+    // }
   },
   mounted(){
     $(document).ready(function () {
@@ -309,75 +302,75 @@ export default {
   });
   },
   methods:{
-    addItem(){
-      this.quiz.quizItems.push({
-        qid:uuid.v4(),
-        type:"single-choice-r",
-        question:"Choose Yes",
-        points:1,
-        isPerCorrectAnswer:"",
-        options:[{
-          cid:uuid.v4(),
-          text:"Yes"
-        },{
-          cid:uuid.v4(),
-          text:"No"
-        }],
-        correctAnswer:''
-      });
-      this.currentIndex = this.quiz.quizItems.length - 1;
-      this.mode="create";
-    },
-    editItem(id){
-      this.mode="edit";
-      this.currentIndex=id;
-    },
-    removeItem(id){
-      this.quiz.quizItems.splice(id,1);
-    },
-    removeAnswer(id){
-      this.quiz.quizItems[this.currentIndex].options.splice(id,1);
-    },
-    addChoice(){
+    // addItem(){
+    //   this.quiz.quizItems.push({
+    //     qid:uuid.v4(),
+    //     type:"single-choice-r",
+    //     question:"Choose Yes",
+    //     points:1,
+    //     isPerCorrectAnswer:"",
+    //     options:[{
+    //       cid:uuid.v4(),
+    //       text:"Yes"
+    //     },{
+    //       cid:uuid.v4(),
+    //       text:"No"
+    //     }],
+    //     correctAnswer:''
+    //   });
+    //   this.currentIndex = this.quiz.quizItems.length - 1;
+    //   this.mode="create";
+    // },
+    // editItem(id){
+    //   this.mode="edit";
+    //   this.currentIndex=id;
+    // },
+    // removeItem(id){
+    //   this.quiz.quizItems.splice(id,1);
+    // },
+    // removeAnswer(id){
+    //   this.quiz.quizItems[this.currentIndex].options.splice(id,1);
+    // },
+    // addChoice(){
 
-      this.quiz.quizItems[this.currentIndex].options.push({
-        cid:uuid.v4(),
-        text:"",
-      });
-    },
-    async saveQuiz(){
-      // console.log(this.$route.params.id,this.quiz);
-      if(this.$route.params.id){        
-        await QuizService.updateQuiz(this.$route.params.id,this.quiz);
-        console.log(this.quiz);
-        let quiz = await QuizService.getQuiz(this.$route.params.id);
-        this.quiz.quizData = quiz[0];
-      }else{
-        var _id = await QuizService.insertQuiz(this.quiz);
-        location.hash="#/quizzes/"+_id.data
+    //   this.quiz.quizItems[this.currentIndex].options.push({
+    //     cid:uuid.v4(),
+    //     text:"",
+    //   });
+    // },
+    // async saveQuiz(){
+    //   // console.log(this.$route.params.id,this.quiz);
+    //   if(this.$route.params.id){        
+    //     await QuizService.updateQuiz(this.$route.params.id,this.quiz);
+    //     console.log(this.quiz);
+    //     let quiz = await QuizService.getQuiz(this.$route.params.id);
+    //     this.quiz.quizData = quiz[0];
+    //   }else{
+    //     var _id = await QuizService.insertQuiz(this.quiz);
+    //     location.hash="#/quizzes/"+_id.data
 
-      }
-    },
-    isMultipleAnswer(type){
-      console.log(type);
-      return (type=="multiple-choice");
-      //
-    }
+    //   }
+    // },
+    // isMultipleAnswer(type){
+    //   console.log(type);
+    //   return (type=="multiple-choice");
+    //   //
+    // }
   },
   computed:{
-    getTotalPoints(){
-      let sum =0;
-      for (var i=0;i<this.quiz.quizItems.length;i+=1){
-        sum+= parseInt(this.quiz.quizItems[i].points)
-      }
-      this.quiz.meta.total=sum;
-      return sum;
-    },
-    getTotalItems(){
-      console.log(this);
-      this.quiz.meta.items=this.quiz.quizItems.length;
-      return this.quiz.quizItems.length;
-    }
+  //   getTotalPoints(){
+  //     let sum =0;
+  //     for (var i=0;i<this.quiz.quizItems.length;i+=1){
+  //       sum+= parseInt(this.quiz.quizItems[i].points)
+  //     }
+  //     this.quiz.meta.total=sum;
+  //     return sum;
+  //   },
+  //   getTotalItems(){
+  //     console.log(this);
+  //     this.quiz.meta.items=this.quiz.quizItems.length;
+  //     return this.quiz.quizItems.length;
+  //   }
   }
 }
 </script>
