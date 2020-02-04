@@ -214,23 +214,31 @@
         </div>
     </nav>
      <div class="row" style="clear:both;">&nbsp;</div>
-        <div class="quiz-items mt-4" v-if="quizItems.length>0"  style="clear:both;">              
-          <div class="row"  v-for="(item,  index) in quizItems">
-            <div class="col-sm-10 ml-3">
-              <p>
-                 {{index+1}} . {{item.question}} <br>
-                 <small>Points : <b>{{item.points}}</b></small><br>
-
-                 <div class="btn-group" role="group" aria-label="Basic example">
+        <div class="quiz-items mt-4" v-if="quizItems.length>0"  style="clear:both;">    
+            
+            <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">Question</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Points</th>
+                    <th scope="col"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(item,  index) in quizItems">
+                    <td>{{index+1}} . {{item.question}}</td>
+                    <td>{{item.type}}</td>
+                    <td>{{item.points}}</td>
+                    <td>
+                       <div class="btn-group" role="group" aria-label="Basic example">
                   <button class="btn btn-warning btn-sm" @click="editItem(index)" data-toggle="modal" data-target="#exampleModal">Edit</button> 
                  <button class="btn btn-danger btn-sm" @click="removeItem(index)">&times;</button>
                   </div>
-
-
-                 
-              </p>              
-            </div>
-          </div>
+                    </td>
+                  </tr>
+                </tbody>
+            </table>
         </div>
     </div>
   </div>
