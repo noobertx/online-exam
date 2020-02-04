@@ -74,44 +74,11 @@ export default {
     }
   },
   methods:{
-    async addQuiz(){
-      if(this.mode=="create"){
-        await QuizService.insertQuiz(this.quizdata);
-      }else{
-        await QuizService.updateQuiz(this.quizdata._id,this.quizdata);
-      }
-      this.quizzes = await QuizService.getQuizzes();
-    },
     async deleteQuiz(id){
-      // console.log(id);
-      await QuizService.deleteQuiz(id);
-      this.quizzes = await QuizService.getQuizzes();
-      this.mode="create";
+       await this.$store.commit('quiz/deleteQuiz',id);
     },
     async cloneQuiz(quiz){
-      var q = quiz;
-      delete(q["_id"]);
-      q.title += " (Clone)";
-
-      var cloned = {
-        quizzes:[],
-        error:'',
-        filteredQuizzes:[],
-        searchText:"",
-        quizData:{
-          title:q.title,
-          items:q.items,
-          wrong:q.wrong,
-          time:q.time,
-          intro:q.intro,
-          tag:q.tag,
-        },
-        quizItems:q.quizItems,
-        settings:q.settings,
-        meta:q.meta,
-        date:new Date(),
-      }
-      await QuizService.insertQuiz(cloned);
+      await this.$store.commit('quiz/cloneQuiz',quiz);
     },
     editQuiz(quiz){
       this.mode="edit";

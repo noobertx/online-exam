@@ -114,7 +114,30 @@ const mutations = {
 		state.meta = loadedData.meta;
 		state.quizItems = loadedData.quizItems;
 		console.log(loadedData);
-  	}
+  	},
+  	async deleteQuiz(state,id){
+      await QuizService.deleteQuiz(id);
+    },
+    async cloneQuiz(state,quiz){
+      var q = quiz;
+      delete(q["_id"]);
+      q.title += " (Clone)";
+
+      var cloned = {
+      	quiz:{      		
+      	title:q.title,
+        intro:q.intro,
+        tag:q.tag,
+        quizItems:q.quizItems,
+        settings:q.settings,
+        meta:q.meta
+      	}
+      }
+
+
+      await QuizService.insertQuiz(cloned);
+    },
+
 }
 const getters = {
 	itemCount(state){
