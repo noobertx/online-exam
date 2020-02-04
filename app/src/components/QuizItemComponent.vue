@@ -287,22 +287,43 @@ export default {
       'createItem',
       'addChoice',
       'isMultipleAnswer',
-      'saveQuiz',
       'editItem',
       'removeItem',
       'removeAnswer'
-      ])    
+      ])  ,
+       async saveQuiz(){
+      if(this.$route.params.id){ 
+        const response = await this.$store.commit('quiz/saveChanges',this.$route.params.id)
+      }else{
+        const response = await this.$store.commit('quiz/saveItem')
+      }
+    },  
   },
   computed:{
-    ...mapState('quiz',[
-      'title',
-      'intro',
+    ...mapState('quiz',[,
       'tag',
       'quizItems',
       'settings',
       'meta',
       'currentIndex'
     ]),
+    title: {
+      get () {
+        return this.$store.state.title
+      },
+      set (value) {
+        this.$store.commit('quiz/updateTitle', value)
+      }
+    },
+    intro: {
+      get () {
+        return this.$store.state.intro
+      },
+      set (value) {
+        this.$store.commit('quiz/updateIntro', value)
+      }
+    },
+
     
     getTotalPoints(){
       return this.quizItems.length;

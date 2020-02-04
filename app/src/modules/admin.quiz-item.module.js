@@ -1,4 +1,5 @@
 const uuid = require('uuid');
+import QuizService from '../QuizItemService'
 
 const state = {
 	title:'New Created Quiz',
@@ -57,10 +58,13 @@ const actions = {
     	text:"",
     })
 	},
+
 	isMultipleAnswer(type){
 		return (type=="multiple-choice");
 	},
 	saveQuiz({commit}){
+
+		
 
 	}
 }
@@ -72,6 +76,12 @@ const mutations = {
 	updateItem(state,index){
 		state.currentIndex = index;
 	},
+	updateTitle(state,val){
+		state.title = val;
+	},
+	updateIntro(state,val){
+		state.intro = val;
+	},
 	deleteItem(state,index){
 		state.quizItems.splice(index,1);
 	},
@@ -80,7 +90,18 @@ const mutations = {
 	},
 	createChoices(state,item){
 		state.quizItems[state.currentIndex].options.push(item);
-	}
+	},
+	updateTitle (state, title) {
+	    state.title = title
+  	},
+	async saveItem(state){
+		const response =  await QuizService.insertQuiz(this.state)
+		return response;
+  	},
+	async saveChanges(state,id){
+		const response = await QuizService.updateQuiz(id,this.state);
+		return response;
+  	}
 }
 const getters = {
 	itemCount(state){
