@@ -11,7 +11,7 @@
           <tr>
             <th scope="col">Title</th>
             <th scope="col">Duration (minutes)</th>
-            <th scope="col">Tag</th>
+
             <th scope="col">Items</th>
             <th scope="col">Total Points</th>
           </tr>
@@ -23,15 +23,15 @@
           v-bind:key="quiz._id">
             <td><a :href="'#/quizzes/'+quiz._id">{{quiz.title}}</a></td>
             <td v-if="quiz.settings">{{quiz.settings.time}}</td>
-            <td></td>
-            <td>{{quiz.tag}}</td>
-            <td v-if="quiz.meta">{{quiz.meta.items}}</td>
+
+
+            <td v-if="quiz.meta">{{quiz.quizItems.length}}</td>
             <td v-else></td>
-            <td v-if="quiz.meta">{{quiz.meta.total}}</td>
+            <td v-if="quiz.meta">{{getTotalPoints(quiz)}}</td>
             <td v-else></td>
             <td>
-              <a href="#" class="btn btn-sm btn-warning" title="Clone Quiz" @click="cloneQuiz(quiz)">[]</a>
-              <a href="#" class="btn btn-sm btn-danger" title="Remove Quiz" @click="deleteQuiz(quiz._id)">x</a>
+              <a href="#" class="btn btn-sm btn-warning" title="Clone Quiz" @click="cloneQuiz(quiz)"><i class="fa fa-clone"></i></a>
+              <a href="#" class="btn btn-sm btn-danger" title="Remove Quiz" @click="deleteQuiz(quiz._id)"><i class="fa fa-times"></i></a>
             </td>
           </tr>
         </tbody>
@@ -44,6 +44,7 @@
 
 <script>
   import QuizService from '../QuizzesService'
+
 export default {
   name: 'QuizzesComponent',
   data(){
@@ -85,6 +86,13 @@ export default {
       this.quizdata = quiz;
       // console.log(this.quizdata);
     },
+    getTotalPoints(quiz){
+      var points = 0 ;
+      for(var i=0;i<quiz.quizItems.length;i+=1){
+        points += parseInt(quiz.quizItems[i].points)
+      }
+      return points;
+    }
   },
   computed:{
      filterQuizInput(){

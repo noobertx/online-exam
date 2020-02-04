@@ -11,6 +11,7 @@ import axios from 'axios';
 import VueToast from 'vue-toast-notification';
 import 'vue-toast-notification/dist/index.css';
 
+
 Vue.config.productionTip = false
 Vue.use(VueRouter)
 const options = {
