@@ -77,8 +77,10 @@ router.delete('/:id',async (req,res)=>{
 })
 //mongodb://heroku_kzkgjmk7:ev0eenrv4jlevttct59op312ub@ds259878.mlab.com:59878/heroku_kzkgjmk7
 async function loadQuizzesCollection(){
-	const client = await mongodb.MongoClient.connect("mongodb+srv://admin_noobert23:DevSpades1523@onlineexam-id1lr.mongodb.net/test?authSource=admin&replicaSet=OnlineExam-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true",{
-		useNewUrlParser:true
+	const client = await mongodb.MongoClient.connect("mongodb+srv://admin_noobert23:DevSpades1523@onlineexam-id1lr.mongodb.net/online-exam?authSource=admin&replicaSet=OnlineExam-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true",{
+		useNewUrlParser:true,
+		useCreateIndex:true,
+		useFindAndModify:false,
 	})
 
 	// return client.db('OnlineExam').collection('users')
