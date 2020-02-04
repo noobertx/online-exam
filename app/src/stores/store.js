@@ -1,11 +1,11 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-// import { account } from './modules/account.module';
+import { quizItem } from '../modules/admin.quiz-item.module';
 
 Vue.use(Vuex);
 
 export const store = new Vuex.Store({
  	modules: {
-        // account
+        quizItem
     }
 })

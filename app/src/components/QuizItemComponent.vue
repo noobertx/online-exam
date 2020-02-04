@@ -237,6 +237,7 @@
 </template>
 
 <script>
+  import { mapState, mapActions } from 'vuex'
   import QuizService from '../QuizItemService'
   import DatePicker from 'vue2-datepicker';
   import 'vue2-datepicker/index.css';
@@ -247,27 +248,7 @@ export default {
   name: 'QuizzesComponent',
   components: { DatePicker },
   data(){
-    return {
-      title:'New Created Quiz',
-      intro:'Lorem Ipsume this is an easy quiz',
-      tag:'',
-      quizItems:[],
-      settings:{
-          time:30,
-          isRandomize:"",
-          isPasswordProtected:"",
-          password:"",
-
-          isScheduled:"",
-          schedule:new Date(),
-          canExpire:"",
-          expirationDate:"",
-          isAttemptLimited:true,
-          attempts:1,
-        },
-      meta:{
-          totalPoints:0
-      },    
+    return {          
       error:'',
       currentIndex:0,
       mode:"create"
@@ -302,6 +283,7 @@ export default {
   });
   },
   methods:{
+     ...mapActions('quizItem', ['createItem']),
     // addItem(){
     //   this.quiz.quizItems.push({
     //     qid:uuid.v4(),
@@ -358,6 +340,7 @@ export default {
     // }
   },
   computed:{
+    ...mapState('quizItem', ['title','intro','tag','quizItems','settings','meta'])
   //   getTotalPoints(){
   //     let sum =0;
   //     for (var i=0;i<this.quiz.quizItems.length;i+=1){
