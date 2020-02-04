@@ -12,6 +12,7 @@
           <div class="modal-body">
             <div v-if="quizItems.length>0">              
              <div class="form-group">
+
                 <label for="question">Question</label>
                 <textarea name="question" class="form-control"
                 id="question" 
@@ -209,10 +210,9 @@
 
                 <span><i class="fa fa-bars"></i></span>
             </button>
-            <button class="btn btn-success" @click="addItem" data-toggle="modal" data-target="#exampleModal">Add Item</button>
+            <button class="btn btn-success" @click="createItem" data-toggle="modal" data-target="#exampleModal">Add Item</button>
         </div>
     </nav>
-
      <div class="row" style="clear:both;">&nbsp;</div>
         <div class="quiz-items mt-4" v-if="quizItems.length>0"  style="clear:both;">              
           <div class="row"  v-for="(item,  index) in quizItems">
@@ -250,7 +250,7 @@ export default {
   data(){
     return {          
       error:'',
-      currentIndex:0,
+      
       mode:"create"
     }
   },
@@ -283,77 +283,37 @@ export default {
   });
   },
   methods:{
-     ...mapActions('quizItem', ['createItem']),
-    // addItem(){
-    //   this.quiz.quizItems.push({
-    //     qid:uuid.v4(),
-    //     type:"single-choice-r",
-    //     question:"Choose Yes",
-    //     points:1,
-    //     isPerCorrectAnswer:"",
-    //     options:[{
-    //       cid:uuid.v4(),
-    //       text:"Yes"
-    //     },{
-    //       cid:uuid.v4(),
-    //       text:"No"
-    //     }],
-    //     correctAnswer:''
-    //   });
-    //   this.currentIndex = this.quiz.quizItems.length - 1;
-    //   this.mode="create";
-    // },
-    // editItem(id){
-    //   this.mode="edit";
-    //   this.currentIndex=id;
-    // },
-    // removeItem(id){
-    //   this.quiz.quizItems.splice(id,1);
-    // },
-    // removeAnswer(id){
-    //   this.quiz.quizItems[this.currentIndex].options.splice(id,1);
-    // },
-    // addChoice(){
-
-    //   this.quiz.quizItems[this.currentIndex].options.push({
-    //     cid:uuid.v4(),
-    //     text:"",
-    //   });
-    // },
-    // async saveQuiz(){
-    //   // console.log(this.$route.params.id,this.quiz);
-    //   if(this.$route.params.id){        
-    //     await QuizService.updateQuiz(this.$route.params.id,this.quiz);
-    //     console.log(this.quiz);
-    //     let quiz = await QuizService.getQuiz(this.$route.params.id);
-    //     this.quiz.quizData = quiz[0];
-    //   }else{
-    //     var _id = await QuizService.insertQuiz(this.quiz);
-    //     location.hash="#/quizzes/"+_id.data
-
-    //   }
-    // },
-    // isMultipleAnswer(type){
-    //   console.log(type);
-    //   return (type=="multiple-choice");
-    //   //
-    // }
+     ...mapActions('quiz',[
+      'createItem',
+      'addChoice',
+      'isMultipleAnswer',
+      'saveQuiz',
+      'editItem',
+      'removeItem',
+      'removeAnswer'
+      ])    
   },
   computed:{
-    ...mapState('quizItem', ['title','intro','tag','quizItems','settings','meta'])
-  //   getTotalPoints(){
-  //     let sum =0;
-  //     for (var i=0;i<this.quiz.quizItems.length;i+=1){
-  //       sum+= parseInt(this.quiz.quizItems[i].points)
-  //     }
-  //     this.quiz.meta.total=sum;
-  //     return sum;
-  //   },
-  //   getTotalItems(){
-  //     console.log(this);
-  //     this.quiz.meta.items=this.quiz.quizItems.length;
-  //     return this.quiz.quizItems.length;
-  //   }
+    ...mapState('quiz',[
+      'title',
+      'intro',
+      'tag',
+      'quizItems',
+      'settings',
+      'meta',
+      'currentIndex'
+    ]),
+    
+    getTotalPoints(){
+      return this.quizItems.length;
+    },
+    getTotalItems(){
+      var sum = 0;
+      for(var i=0;i<this.quizItems.length;i+=1){
+        sum += parseInt(this.quizItems[i].points)
+      }
+      return sum;
+    }
   }
 }
 </script>
