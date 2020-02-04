@@ -1,6 +1,8 @@
 const uuid = require('uuid');
 import QuizService from '../QuizItemService'
 
+
+
 const state = {
 	title:'New Created Quiz',
 	intro:'Lorem Ipsume this is an easy quiz',
@@ -101,6 +103,17 @@ const mutations = {
 	async saveChanges(state,id){
 		const response = await QuizService.updateQuiz(id,this.state);
 		return response;
+  	},
+  	async loadData(state,id){
+		const loadedData = await QuizService.getQuiz(id);
+
+		state.title = loadedData.title;
+		state.intro = loadedData.intro;
+		state.tag = loadedData.tag;
+		state.settings = loadedData.settings;
+		state.meta = loadedData.meta;
+		state.quizItems = loadedData.quizItems;
+		console.log(loadedData);
   	}
 }
 const getters = {

@@ -67,6 +67,8 @@ export default {
     try{
       this.quizzes = await QuizService.getQuizzes();
       this.filteredQuizzes = this.quizzes;
+
+      console.log(this.filteredQuizzes )
     }catch(err){
       this.error = err.message;
     }

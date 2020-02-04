@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const url = 'api/quizzes/'
+const url = 'api/quiz/'
 
 class QuizService{
 	static getQuiz(id){
@@ -9,9 +9,10 @@ class QuizService{
 				const res = await axios.get(`${url}${id}`);
 				const data = res.data;
 				resolve(
-					data.map(quiz=>({
-						...quiz
-					}))
+					data
+					// data.map(quiz=>({
+					// 	...quiz
+					// }))
 				)
 			}catch(err){
 				reject(err);

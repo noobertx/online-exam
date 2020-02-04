@@ -7,9 +7,27 @@ const exphbs = require("express-handlebars");
 const logger = require("./middleware/Logger");
 const members = require("./Members");
 const jwt = require("jsonwebtoken");
+const mongoose = require("mongoose");
 const app = express();
 
+const multer = require('multer');
+const upload = multer();
+
+
+const Quiz = require("./services/Quiz.services");
+// const Users = require("./models/user");
+// const Quiz = require("./models/quiz");
+// const Quiz = require("./models/quiz");
 // app.use(logger);
+mongoose.connect("mongodb+srv://admin_noobert23:DevSpades1523@onlineexam-id1lr.mongodb.net/online-exam?authSource=admin&replicaSet=OnlineExam-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true",(err)=>{
+
+	if(!err){
+		console.log("Server connected to mongodb")
+	}else{
+		console.log("Error :Server connected to mongodb")
+
+	}
+});
 
 // Body Parse Middleware
 app.use(bodyParser.json());
@@ -17,12 +35,38 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({extended:false}));
 
-app.use('/api/login',require('./routes/api/login'));
-app.use('/api/members',require('./routes/api/members'));
-app.use('/api/questions',require('./routes/api/questions'));
-app.use('/api/quizzes',require('./routes/api/quizzes'));
-app.use('/api/history',require('./routes/api/history'));
+// app.use('/api/login',require('./routes/api/login'));
+// app.use('/api/members',require('./routes/api/members'));
+// app.use('/api/questions',require('./routes/api/questions'));
+// app.use('/api/quizzes',require('./routes/api/quizzes'));
+// app.use('/api/history',require('./routes/api/history'));
+// var db = mongoose.connection;
 
+
+app.get('/',function(res,req){})
+// app.get('/users',function(res,req){
+// 	Users.getUsers((err,users)=>{
+// 		if(err){
+
+// 		}
+// 		res.json(users)
+// 	})
+// })
+
+app.get('/api/quiz',function(req,res){
+	Quiz.getAllQuiz(req,res);
+})
+
+app.get('/api/quiz/:id',function(req,res){
+	Quiz.getQuizById(req,res);
+})
+
+
+
+app.post('/api/quiz',upload.none(),function(req,res){
+
+	Quiz.createQuiz(req,res);
+})
 
 //User Authentication
 

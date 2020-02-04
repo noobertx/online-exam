@@ -254,24 +254,15 @@ export default {
       mode:"create"
     }
   },
-  created(){
+  async created(){
 
-    // try{
-    //   if(this.$route.params.id){
-
-    //   let quiz = await QuizService.getQuiz(this.$route.params.id);
-    //   this.quiz.quizData = quiz[0];
-    //   this.quiz.quizItems = quiz[0].quizItems;
-    //   this.quiz.settings = quiz[0].settings;
-    //   this.quiz.meta = quiz[0].meta || {};
-
-    //   this.quiz.meta.total = 0;
-    //   this.quiz.meta.items = 0;
-    //   }
-    //   // console.log(quiz[0].quizItems);
-    // }catch(err){
-    //   this.error = err.message;
-    // }
+    try{
+      if(this.$route.params.id){
+        await this.$store.commit('quiz/loadData',this.$route.params.id);
+      }
+    }catch(err){
+      this.error = err.message;
+    }
   },
   mounted(){
     $(document).ready(function () {
