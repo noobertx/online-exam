@@ -1,6 +1,27 @@
 <template>
 	<div class="container">
-    <div v-if="canDisplay" >
+    <div v-if="page=='init'">
+      <h1  class="text-center">{{quiz.title}}</h1>
+      <p  class="text-center">{{quiz.intro}}</p>
+
+      <div class="row " v-if="comingSoon">     
+        <h2 class="text-center" style="width:100%">Coming Soon</h2>
+        <h4 class="text-center" style="width:100%">{{availableTimer}}</h4>
+
+
+      </div>
+        {{renderTimerAvailability()}}
+        {{renderTimerExpire()}}
+      <div class="row" v-if="quiz.settings.canExpire">
+        <h2 class="text-center" style="width:100%">Expires In</h2>
+        <h4 class="text-center" style="width:100%">{{expireTimer}}</h4>
+      </div>
+      <pre>{{quiz.settings}}</pre>
+      <p>// item per page here//</p>
+      <button class="btn btn-primary btn-block">Proceed</button>
+    </div>
+
+    <div v-if="page=='exam'" >
     <h1 class="text-center">{{quiz.title}}</h1>
     <p class="text-center">{{quiz.description}}</p>
     <p class="small">{{timer}}</p>
@@ -44,6 +65,7 @@
 	</div>
 </template>
 <script>
+  import { mapState, mapActions } from 'vuex'
   import Vue from 'vue'
   import VueToast from 'vue-toast-notification';
 import 'vue-toast-notification/dist/index.css';
@@ -54,103 +76,104 @@ import 'vue-toast-notification/dist/index.css';
 	export default{
 		data(){
     		return {
-    		  user:{
-    		  	name:"Robert Talavera",
-    		  	email:"noobertx@gmail.com",
-    		  	quizPaper:[],
-    		  	score:0
-    		  },
-          canDisplay:true,
-          status:[],
-          message:[],
-    		  quiz:[],
-          timer: "",
-          date: new Date()
+          comingSoon:false,
+          expired:false,
+          canDisplay:false,
+          availableTimer:"",
+          expireTimer:""
+    		  // user:{
+    		  // 	name:"Robert Talavera",
+    		  // 	email:"noobertx@gmail.com",
+    		  // 	quizPaper:[],
+    		  // 	score:0
+    		  // },
+        //   canDisplay:true,
+        //   status:[],
+        //   message:[],
+    		  // quiz:[],
+        //   timer: "",
+        //   date: new Date()
     		}
   		},
   		async created(){
 
-      			 let quiz = await QuizService.getQuiz(this.$route.params.id);
-             this.user = JSON.parse(localStorage.getItem('user'));
-            this.user.quizPaper=[];
-            this.user.score=0;
+        await this.$store.commit('quizPaper/loadData',this.$route.params.id);
+      // 			 let quiz = await QuizService.getQuiz(this.$route.params.id);
+      //        this.user = JSON.parse(localStorage.getItem('user'));
+      //       this.user.quizPaper=[];
+      //       this.user.score=0;
 
             
 
                          
-             this.quiz = quiz[0];
-            console.log(this.quiz);
+      //        this.quiz = quiz[0];
+      //       console.log(this.quiz);
 
-    		try{
+    		// try{
 
 
-      			 if(this.quiz.settings.isRandomize){
-      			 	this.quiz.quizItems = this.shuffle(this.quiz.quizItems ) ;
-      			 }
-      			 this.generateQuizPaper(this.quiz.quizItems);
-              if(this.quiz.settings.time){
-                this.renderCountDownTimer(this.quiz.settings.time);
-              }
+      // 			 if(this.quiz.settings.isRandomize){
+      // 			 	this.quiz.quizItems = this.shuffle(this.quiz.quizItems ) ;
+      // 			 }
+      // 			 this.generateQuizPaper(this.quiz.quizItems);
+      //         if(this.quiz.settings.time){
+      //           this.renderCountDownTimer(this.quiz.settings.time);
+      //         }
 
 
               if(!this.isInSchedule()){
                 this.canDisplay=false;
-                this.status.push("Forbidden")
-                this.message.push("This item is currently unavailable")
+                this.comingSoon = true;
+                // this.status.push("Forbidden")
+                // this.message.push("This item is currently unavailable")
+              }else{
+                this.comingSoon = false;                
               }
 
               if(this.isExpired()){
                 this.canDisplay=false;
-                this.status.push("Forbidden")
-                this.message.push("This item is expired");               
+                this.expired = true;
+                // this.status.push("Forbidden")
+                // this.message.push("This item is expired");               
+              }else{
+                this.expired = false;
               }
+
+              console.log(this);
               
-              if(this.canDisplay){
-                Vue.$toast.success('Good Luck on your exam', {
-                  position: 'top-right',
-                  dismissible:true,
-                  duration:10000
-                })
-              }
-    		}catch(err){
-      			this.error = err.message;
+      //         if(this.canDisplay){
+      //           Vue.$toast.success('Good Luck on your exam', {
+      //             position: 'top-right',
+      //             dismissible:true,
+      //             duration:10000
+      //           })
+      //         }
+    		// }catch(err){
+      // 			this.error = err.message;
 
       			
-    		}
+    		// }
   		},
-      computed:{
-
-      },
   		methods:{
-  			shuffle(array) {
-  				var currentIndex = array.length, temporaryValue, randomIndex;
-				
-  				// While there remain elements to shuffle...
-  				while (0 !== currentIndex) {
-				
-  				  // Pick a remaining element...
-  				  randomIndex = Math.floor(Math.random() * currentIndex);
-  				  currentIndex -= 1;
-				
-  				  // And swap it with the current element.
-  				  temporaryValue = array[currentIndex];
-  				  array[currentIndex] = array[randomIndex];
-  				  array[randomIndex] = temporaryValue;
-  				}
-				
-  				return array;
-			},
+        ...mapActions('quizPaper',[
+        'generateQuizPaper',
+        'setAnswer',
+        'renderCountDownTimer',
+        'checkResults'
+        ]),
+
       isExpired(){      
         if(this.quiz.settings.canExpire){
           var expiration = this.quiz.settings.expirationDate.replace("T"," ");
           expiration = expiration.replace("Z"," ");
           expiration = new Date(expiration);           
           var dateNow = new Date();     
-
+          console.log((expiration < dateNow));
           return (expiration < dateNow) ? true : false;
         }
       },
       isInSchedule(){
+        console.log(this.quiz.settings.isScheduled);
         if(this.quiz.settings.isScheduled){
           var schedule = this.quiz.settings.schedule.replace("T"," ");
           schedule = schedule.replace("Z"," ");
@@ -160,40 +183,90 @@ import 'vue-toast-notification/dist/index.css';
         }
         return true;
       },
-			generateQuizPaper(collection){
-				 this.user.quizPaper = collection.map((i)=>{
-					return {
-						question : i.question,
-						answer:[]
-					};
-				})
-			},
-			test(index){
-        if(this.quiz.quizItems[index].type=="multiple-choice"){
-          var max = this.quiz.quizItems[index].correctAnswer.length;
-          if(max<=this.user.quizPaper[index].answer.length){
-             Vue.$toast.success('Your Have selected More than '+this.quiz.quizItems[index].correctAnswer.length+"answers ", {
-              position: 'top-right',
-              dismissible:true,
-              duration:10000
-            })
 
-            this.user.quizPaper[index].answer.splice(2,1);
-          }
-        }
-  		},
 
-      renderCountDownTimer(time){
-         var d = new Date(),context=this;
-            d.setMinutes(d.getMinutes()+time);           
+  	// 		shuffle(array) {
+  	// 			var currentIndex = array.length, temporaryValue, randomIndex;
+				
+  	// 			// While there remain elements to shuffle...
+  	// 			while (0 !== currentIndex) {
+				
+  	// 			  // Pick a remaining element...
+  	// 			  randomIndex = Math.floor(Math.random() * currentIndex);
+  	// 			  currentIndex -= 1;
+				
+  	// 			  // And swap it with the current element.
+  	// 			  temporaryValue = array[currentIndex];
+  	// 			  array[currentIndex] = array[randomIndex];
+  	// 			  array[randomIndex] = temporaryValue;
+  	// 			}
+				
+  	// 			return array;
+			// },
+   //
+   
+			// generateQuizPaper(collection){
+			// 	 this.user.quizPaper = collection.map((i)=>{
+			// 		return {
+			// 			question : i.question,
+			// 			answer:[]
+			// 		};
+			// 	})
+			// },
+			// test(index){
+   //      if(this.quiz.quizItems[index].type=="multiple-choice"){
+   //        var max = this.quiz.quizItems[index].correctAnswer.length;
+   //        if(max<=this.user.quizPaper[index].answer.length){
+   //           Vue.$toast.success('Your Have selected More than '+this.quiz.quizItems[index].correctAnswer.length+"answers ", {
+   //            position: 'top-right',
+   //            dismissible:true,
+   //            duration:10000
+   //          })
 
-             var timeinterval = setInterval(function(){
-              var t = context.getTimeRemaining(d);
-              context.timer =   t.hours + ' HRS ' + t.minutes + ' Mins ' + t.seconds+" Secs";
+   //          this.user.quizPaper[index].answer.splice(2,1);
+   //        }
+   //      }
+  	// 	},
+
+   //    renderCountDownTimer(time){
+   //       var d = new Date(),context=this;
+   //          d.setMinutes(d.getMinutes()+time);           
+
+   //           var timeinterval = setInterval(function(){
+   //            var t = context.getTimeRemaining(d);
+   //            context.timer =   t.hours + ' HRS ' + t.minutes + ' Mins ' + t.seconds+" Secs";
+   //            if(t.total<=0){
+   //              clearInterval(timeinterval);
+   //            }
+   //          },1000)
+   //    },
+   renderTimerExpire(){
+      var context = this;
+        var expiration = this.quiz.settings.expirationDate.replace("T"," ");
+        expiration = expiration.replace("Z"," ");
+        expiration = new Date(expiration);
+          var timeinterval = setInterval(function(){
+              var t = context.getTimeRemaining(expiration);
+              context.expireTimer = t.days+" Days "+  t.hours + ' HRS ' + t.minutes + ' Mins ' + t.seconds+" Secs";
               if(t.total<=0){
                 clearInterval(timeinterval);
               }
             },1000)
+   },
+      renderTimerAvailability(){
+        if(this.comingSoon){
+          var context = this;
+        var schedule = this.quiz.settings.schedule.replace("T"," ");
+        schedule = schedule.replace("Z"," ");
+        schedule = new Date(schedule);
+          var timeinterval = setInterval(function(){
+              var t = context.getTimeRemaining(schedule);
+              context.availableTimer = t.days+" Days "+  t.hours + ' HRS ' + t.minutes + ' Mins ' + t.seconds+" Secs";
+              if(t.total<=0){
+                clearInterval(timeinterval);
+              }
+            },1000)
+        }
       },
       getTimeRemaining(endtime){
         var t = Date.parse(endtime) - Date.parse(new Date());
@@ -209,79 +282,87 @@ import 'vue-toast-notification/dist/index.css';
           'seconds': seconds
         };
       },
-  		checkResults(){
-  				var context = this;
-  				this.user.score = 0 ;
-          this.user.overall = 0 ;
-  				this.user.quizPaper.forEach((i)=>{
-  					context.quiz.quizItems.forEach((q)=>{
-  						if(i.question==q.question){
+  	// 	checkResults(){
+  	// 			var context = this;
+  	// 			this.user.score = 0 ;
+   //        this.user.overall = 0 ;
+  	// 			this.user.quizPaper.forEach((i)=>{
+  	// 				context.quiz.quizItems.forEach((q)=>{
+  	// 					if(i.question==q.question){
 
-                  if(q.type=="multiple-choice"){
-                    var points = q.points;
-                    var correct = q.correctAnswer.length;
-                    var score = points/correct;
+   //                if(q.type=="multiple-choice"){
+   //                  var points = q.points;
+   //                  var correct = q.correctAnswer.length;
+   //                  var score = points/correct;
 
-                    q.correctAnswer.forEach(function(answer){
-                      if(i.answer.indexOf(answer)!=-1){
-                        if(q.isPerCorrectAnswer=="false"){
-                          context.user.score += score;
+   //                  q.correctAnswer.forEach(function(answer){
+   //                    if(i.answer.indexOf(answer)!=-1){
+   //                      if(q.isPerCorrectAnswer=="false"){
+   //                        context.user.score += score;
 
-                        }else{
-                          context.user.score += parseFloat(points);                          
-                        }
-                      }
+   //                      }else{
+   //                        context.user.score += parseFloat(points);                          
+   //                      }
+   //                    }
 
-                      if(q.isPerCorrectAnswer=="false"){
-                        context.user.overall += parseFloat(score)
-                      }else{
-                        context.user.overall += parseFloat(q.points)                     
-                      }
-                    })
+   //                    if(q.isPerCorrectAnswer=="false"){
+   //                      context.user.overall += parseFloat(score)
+   //                    }else{
+   //                      context.user.overall += parseFloat(q.points)                     
+   //                    }
+   //                  })
 
                    
 
 
-                  }else if(q.type=="fill-in-the-blanks"){
-                    if(i.answer.length>0){                      
-                    var userAnswer = i.answer.replace(/\s/g,"").toLowerCase();
-                    var examAnswer = q.correctAnswer.replace(/\s/g,"").toLowerCase();
-                      if(userAnswer==examAnswer){
-                        context.user.score += parseFloat(q.points);
-                      }
-                    }
-                     this.user.overall += parseFloat(q.points)
-                  }else{                   
-      							if(i.answer==q.correctAnswer){
-  	     							context.user.score += parseFloat(q.points);
-  			     				}
-                     this.user.overall += parseFloat(q.points)
-                  }
+   //                }else if(q.type=="fill-in-the-blanks"){
+   //                  if(i.answer.length>0){                      
+   //                  var userAnswer = i.answer.replace(/\s/g,"").toLowerCase();
+   //                  var examAnswer = q.correctAnswer.replace(/\s/g,"").toLowerCase();
+   //                    if(userAnswer==examAnswer){
+   //                      context.user.score += parseFloat(q.points);
+   //                    }
+   //                  }
+   //                   this.user.overall += parseFloat(q.points)
+   //                }else{                   
+   //    							if(i.answer==q.correctAnswer){
+  	//      							context.user.score += parseFloat(q.points);
+  	// 		     				}
+   //                   this.user.overall += parseFloat(q.points)
+   //                }
       
              
-  						}
-  					})					
-				})
+  	// 					}
+  	// 				})					
+			// 	})
 
-          var scoreRating = ((this.user.score/this.user.overall)*100);
+   //        var scoreRating = ((this.user.score/this.user.overall)*100);
 
-          Vue.$toast.success('Your Score is '+ scoreRating.toFixed(2) +" % ", {
-              position: 'top-right',
-              dismissible:true,
-              duration:10000
-            })
+   //        Vue.$toast.success('Your Score is '+ scoreRating.toFixed(2) +" % ", {
+   //            position: 'top-right',
+   //            dismissible:true,
+   //            duration:10000
+   //          })
 
-          HistoryService.insertQuiz({
-            userId:this.user.id,
-            examId:this.$route.params.id,
-            score:scoreRating.toFixed(2),
-          });
+   //        HistoryService.insertQuiz({
+   //          userId:this.user.id,
+   //          examId:this.$route.params.id,
+   //          score:scoreRating.toFixed(2),
+   //        });
 
-  			}
+  	// 		}
   		},
 
   		computed:{
-  			
+  			...mapState('quizPaper',[
+          'user',          
+          'quiz',
+          'index',
+          'timer',
+          'date',
+          'page',
+          'status',
+        ]),
   		}
 	}
 </script>
