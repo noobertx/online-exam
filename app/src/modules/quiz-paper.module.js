@@ -56,7 +56,6 @@ const state = {
 			schedule:"",
 		}
 	},
-	page:"init",
 	commingSoon:true,
 	expired:false,
 	index:0,
@@ -145,24 +144,6 @@ const mutations = {
 				answer:[]
 			}
 		})
-
-		// if(!this.isInSchedule()){
-		// 	state.canDisplay = false;
-		// 	state.quiz.settings.commingSoon = true;
-		// 	state.status.push("Forbidden")
-		// 	state.message.push("This item is currently unavailable")
-		// }else{
-		// 	state.quiz.settings.commingSoon = false;			
-		// }
-
-		// if(this.isExpired()){
-		// 	state.canDisplay = false;
-		// 	state.quiz.settings.expired = true;
-		// 	state.status.push("Forbidden")
-		// 	state.message.push("This item has expired")
-		// }else{
-		// 	state.quiz.settings.expired = false;			
-		// }
 	},
 	updateAnswer(state,index){
 		if(state.quiz.quizItems[index].type=="multiple-choice"){

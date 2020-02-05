@@ -16,19 +16,54 @@
         <h2 class="text-center" style="width:100%">Expires In</h2>
         <h4 class="text-center" style="width:100%">{{expireTimer}}</h4>
       </div>
-      <pre>{{quiz.settings}}</pre>
-      <p>// item per page here//</p>
-      <button class="btn btn-primary btn-block">Proceed</button>
+
+      <div v-if="canDisplay">        
+      <input type="number" v-model="itemsPerPage">
+      <button class="btn btn-primary btn-block" @click="page='exam'">Proceed</button>
+      </div>
     </div>
 
     <div v-if="page=='exam'" >
-    <h1 class="text-center">{{quiz.title}}</h1>
-    <p class="text-center">{{quiz.description}}</p>
-    <p class="small">{{timer}}</p>
-    
 
 
-		<div class="row" v-for="(item,index) in quiz.quizItems">
+    <p class="small">{{timer}}</p> 
+
+
+    <ul class="pagination">
+      <li class="page-item"><a class="page-link" @click="currentPage = (currentPage>0) ? currentPage -= 1 : currentPage">Previous</a></li>
+      <li class="page-item" v-for="(item,index) in paginatedItems">
+        <a class="page-link" @click="currentPage=index">{{(index+1)}}</a>
+      </li>
+      <li class="page-item"><a class="page-link" @click = "currentPage = (currentPage < paginatedItems.length-1) ? currentPage+=1 : currentPage " >Next</a></li>
+    </ul>
+
+    <div class="row" v-for="(item,index) in paginatedItems[currentPage]">
+      <div class="col-md-12">
+        <p>{{index+1}}. {{item.question}}</p>
+        <select class="form-control mb-3" v-if="item.type=='single-choice-d'" v-model="user.quizPaper[index].answer">
+          <option value="" selected disabled></option>
+          <option v-for="(option,optIndex)  in item.options" :value="option.cid">{{option.text}}</option>    
+        </select>
+        <input type="text" class="form-control mb-3" v-else-if="item.type=='fill-in-the-blanks'" v-model="user.quizPaper[index].answer">
+        <ul v-for="(option,optIndex) in item.options" v-else class="list-group mb-3">
+          <li class="list-group-item">
+            <label v-if="item.type=='single-choice-r'">
+              <input type="radio" :value = "option.cid" v-model="user.quizPaper[index].answer" @input="test(index)">
+              {{option.text}}
+            </label>
+            <label v-if="item.type=='multiple-choice'">
+              <input type="checkbox" :value = "option.cid" :id="option.cid"  v-model="user.quizPaper[index].answer" :disabled="user.quizPaper[index].answer.length > item.correctAnswer.length-1 && user.quizPaper[index].answer.indexOf(option.cid) === -1" >
+              {{option.text}}
+            </label>
+
+          </li>
+        </ul>
+
+      </div>
+      </div>
+
+
+	<!-- 	<div class="row" v-for="(item,index) in quiz.quizItems">
 			<div class="col-md-12">
 				<p>{{index+1}}. {{item.question}}</p>
         <select class="form-control mb-3" v-if="item.type=='single-choice-d'" v-model="user.quizPaper[index].answer">
@@ -51,7 +86,7 @@
 				</ul>
 
 			</div>			
-		</div>
+		</div> -->
 		<button class="btn btn-success btn-block" @click="checkResults" v-if="canDisplay">Submit</button>
     </div>
     <div v-else>
@@ -76,11 +111,16 @@ import 'vue-toast-notification/dist/index.css';
 	export default{
 		data(){
     		return {
+          page:'init',
           comingSoon:false,
           expired:false,
           canDisplay:false,
           availableTimer:"",
-          expireTimer:""
+          expireTimer:"",
+          itemsPerPage:1,
+          paginatedItems:[],
+          currentPage:0
+
     		  // user:{
     		  // 	name:"Robert Talavera",
     		  // 	email:"noobertx@gmail.com",
@@ -98,6 +138,8 @@ import 'vue-toast-notification/dist/index.css';
   		async created(){
 
         await this.$store.commit('quizPaper/loadData',this.$route.params.id);
+
+
       // 			 let quiz = await QuizService.getQuiz(this.$route.params.id);
       //        this.user = JSON.parse(localStorage.getItem('user'));
       //       this.user.quizPaper=[];
@@ -121,6 +163,7 @@ import 'vue-toast-notification/dist/index.css';
       //         }
 
 
+                this.canDisplay=true;
               if(!this.isInSchedule()){
                 this.canDisplay=false;
                 this.comingSoon = true;
@@ -139,8 +182,9 @@ import 'vue-toast-notification/dist/index.css';
                 this.expired = false;
               }
 
-              console.log(this);
-              
+
+                this.generateQuizPaper();
+                this.paginateItems(this.quiz.quizItems);
       //         if(this.canDisplay){
       //           Vue.$toast.success('Good Luck on your exam', {
       //             position: 'top-right',
@@ -182,6 +226,32 @@ import 'vue-toast-notification/dist/index.css';
           return (schedule < dateNow) ? true : false;
         }
         return true;
+      },
+      paginateItems(collections){
+        var the_index = 0;
+        var items_count = 0;
+        var pages = Math.ceil(this.quiz.quizItems.length/this.itemsPerPage);
+        for(var i=0;i<pages;i+=1){
+          this.paginatedItems.push([])
+        }
+
+        collections.forEach(function(c){
+          if(this.paginatedItems[the_index].length<this.itemsPerPage){
+            this.paginatedItems[the_index].push(c);
+          }else{
+            the_index+=1;
+            this.paginatedItems[the_index].push(c);
+          }
+        },this)
+
+
+
+        // console.log(this.paginatedItems);
+        // for(var i=0;i<itemsPerPage;i+=1){
+        //   paginateItems.push(collections[the_index])
+        //   the_index+=1;
+        // }
+        // for(var i=0;i<collections.length;i+=1){}
       },
 
 
@@ -360,7 +430,6 @@ import 'vue-toast-notification/dist/index.css';
           'index',
           'timer',
           'date',
-          'page',
           'status',
         ]),
   		}
