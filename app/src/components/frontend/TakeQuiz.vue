@@ -62,31 +62,6 @@
       </div>
       </div>
 
-
-	<!-- 	<div class="row" v-for="(item,index) in quiz.quizItems">
-			<div class="col-md-12">
-				<p>{{index+1}}. {{item.question}}</p>
-        <select class="form-control mb-3" v-if="item.type=='single-choice-d'" v-model="user.quizPaper[index].answer">
-          <option value="" selected disabled></option>
-          <option v-for="(option,optIndex)  in item.options" :value="option.cid">{{option.text}}</option>    
-        </select>
-        <input type="text" class="form-control mb-3" v-else-if="item.type=='fill-in-the-blanks'" v-model="user.quizPaper[index].answer">
-				<ul v-for="(option,optIndex) in item.options" v-else class="list-group mb-3">
-					<li class="list-group-item">
-						<label v-if="item.type=='single-choice-r'">
-							<input type="radio" :value = "option.cid" v-model="user.quizPaper[index].answer" @input="test(index)">
-							{{option.text}}
-						</label>
-            <label v-if="item.type=='multiple-choice'">
-              <input type="checkbox" :value = "option.cid" :id="option.cid"  v-model="user.quizPaper[index].answer" :disabled="user.quizPaper[index].answer.length > item.correctAnswer.length-1 && user.quizPaper[index].answer.indexOf(option.cid) === -1" >
-              {{option.text}}
-            </label>
-
-					</li>
-				</ul>
-
-			</div>			
-		</div> -->
 		<button class="btn btn-success btn-block" @click="checkResults" v-if="canDisplay">Submit</button>
     </div>
     <div v-else>
@@ -120,64 +95,23 @@ import 'vue-toast-notification/dist/index.css';
           itemsPerPage:1,
           paginatedItems:[],
           currentPage:0
-
-    		  // user:{
-    		  // 	name:"Robert Talavera",
-    		  // 	email:"noobertx@gmail.com",
-    		  // 	quizPaper:[],
-    		  // 	score:0
-    		  // },
-        //   canDisplay:true,
-        //   status:[],
-        //   message:[],
-    		  // quiz:[],
-        //   timer: "",
-        //   date: new Date()
     		}
   		},
   		async created(){
 
         await this.$store.commit('quizPaper/loadData',this.$route.params.id);
 
-
-      // 			 let quiz = await QuizService.getQuiz(this.$route.params.id);
-      //        this.user = JSON.parse(localStorage.getItem('user'));
-      //       this.user.quizPaper=[];
-      //       this.user.score=0;
-
-            
-
-                         
-      //        this.quiz = quiz[0];
-      //       console.log(this.quiz);
-
-    		// try{
-
-
-      // 			 if(this.quiz.settings.isRandomize){
-      // 			 	this.quiz.quizItems = this.shuffle(this.quiz.quizItems ) ;
-      // 			 }
-      // 			 this.generateQuizPaper(this.quiz.quizItems);
-      //         if(this.quiz.settings.time){
-      //           this.renderCountDownTimer(this.quiz.settings.time);
-      //         }
-
-
                 this.canDisplay=true;
               if(!this.isInSchedule()){
                 this.canDisplay=false;
                 this.comingSoon = true;
-                // this.status.push("Forbidden")
-                // this.message.push("This item is currently unavailable")
               }else{
                 this.comingSoon = false;                
               }
 
               if(this.isExpired()){
                 this.canDisplay=false;
-                this.expired = true;
-                // this.status.push("Forbidden")
-                // this.message.push("This item is expired");               
+                this.expired = true;               
               }else{
                 this.expired = false;
               }
@@ -185,18 +119,6 @@ import 'vue-toast-notification/dist/index.css';
 
                 this.generateQuizPaper();
                 this.paginateItems(this.quiz.quizItems);
-      //         if(this.canDisplay){
-      //           Vue.$toast.success('Good Luck on your exam', {
-      //             position: 'top-right',
-      //             dismissible:true,
-      //             duration:10000
-      //           })
-      //         }
-    		// }catch(err){
-      // 			this.error = err.message;
-
-      			
-    		// }
   		},
   		methods:{
         ...mapActions('quizPaper',[
@@ -244,72 +166,7 @@ import 'vue-toast-notification/dist/index.css';
           }
         },this)
 
-
-
-        // console.log(this.paginatedItems);
-        // for(var i=0;i<itemsPerPage;i+=1){
-        //   paginateItems.push(collections[the_index])
-        //   the_index+=1;
-        // }
-        // for(var i=0;i<collections.length;i+=1){}
       },
-
-
-  	// 		shuffle(array) {
-  	// 			var currentIndex = array.length, temporaryValue, randomIndex;
-				
-  	// 			// While there remain elements to shuffle...
-  	// 			while (0 !== currentIndex) {
-				
-  	// 			  // Pick a remaining element...
-  	// 			  randomIndex = Math.floor(Math.random() * currentIndex);
-  	// 			  currentIndex -= 1;
-				
-  	// 			  // And swap it with the current element.
-  	// 			  temporaryValue = array[currentIndex];
-  	// 			  array[currentIndex] = array[randomIndex];
-  	// 			  array[randomIndex] = temporaryValue;
-  	// 			}
-				
-  	// 			return array;
-			// },
-   //
-   
-			// generateQuizPaper(collection){
-			// 	 this.user.quizPaper = collection.map((i)=>{
-			// 		return {
-			// 			question : i.question,
-			// 			answer:[]
-			// 		};
-			// 	})
-			// },
-			// test(index){
-   //      if(this.quiz.quizItems[index].type=="multiple-choice"){
-   //        var max = this.quiz.quizItems[index].correctAnswer.length;
-   //        if(max<=this.user.quizPaper[index].answer.length){
-   //           Vue.$toast.success('Your Have selected More than '+this.quiz.quizItems[index].correctAnswer.length+"answers ", {
-   //            position: 'top-right',
-   //            dismissible:true,
-   //            duration:10000
-   //          })
-
-   //          this.user.quizPaper[index].answer.splice(2,1);
-   //        }
-   //      }
-  	// 	},
-
-   //    renderCountDownTimer(time){
-   //       var d = new Date(),context=this;
-   //          d.setMinutes(d.getMinutes()+time);           
-
-   //           var timeinterval = setInterval(function(){
-   //            var t = context.getTimeRemaining(d);
-   //            context.timer =   t.hours + ' HRS ' + t.minutes + ' Mins ' + t.seconds+" Secs";
-   //            if(t.total<=0){
-   //              clearInterval(timeinterval);
-   //            }
-   //          },1000)
-   //    },
    renderTimerExpire(){
       var context = this;
         var expiration = this.quiz.settings.expirationDate.replace("T"," ");
@@ -352,75 +209,6 @@ import 'vue-toast-notification/dist/index.css';
           'seconds': seconds
         };
       },
-  	// 	checkResults(){
-  	// 			var context = this;
-  	// 			this.user.score = 0 ;
-   //        this.user.overall = 0 ;
-  	// 			this.user.quizPaper.forEach((i)=>{
-  	// 				context.quiz.quizItems.forEach((q)=>{
-  	// 					if(i.question==q.question){
-
-   //                if(q.type=="multiple-choice"){
-   //                  var points = q.points;
-   //                  var correct = q.correctAnswer.length;
-   //                  var score = points/correct;
-
-   //                  q.correctAnswer.forEach(function(answer){
-   //                    if(i.answer.indexOf(answer)!=-1){
-   //                      if(q.isPerCorrectAnswer=="false"){
-   //                        context.user.score += score;
-
-   //                      }else{
-   //                        context.user.score += parseFloat(points);                          
-   //                      }
-   //                    }
-
-   //                    if(q.isPerCorrectAnswer=="false"){
-   //                      context.user.overall += parseFloat(score)
-   //                    }else{
-   //                      context.user.overall += parseFloat(q.points)                     
-   //                    }
-   //                  })
-
-                   
-
-
-   //                }else if(q.type=="fill-in-the-blanks"){
-   //                  if(i.answer.length>0){                      
-   //                  var userAnswer = i.answer.replace(/\s/g,"").toLowerCase();
-   //                  var examAnswer = q.correctAnswer.replace(/\s/g,"").toLowerCase();
-   //                    if(userAnswer==examAnswer){
-   //                      context.user.score += parseFloat(q.points);
-   //                    }
-   //                  }
-   //                   this.user.overall += parseFloat(q.points)
-   //                }else{                   
-   //    							if(i.answer==q.correctAnswer){
-  	//      							context.user.score += parseFloat(q.points);
-  	// 		     				}
-   //                   this.user.overall += parseFloat(q.points)
-   //                }
-      
-             
-  	// 					}
-  	// 				})					
-			// 	})
-
-   //        var scoreRating = ((this.user.score/this.user.overall)*100);
-
-   //        Vue.$toast.success('Your Score is '+ scoreRating.toFixed(2) +" % ", {
-   //            position: 'top-right',
-   //            dismissible:true,
-   //            duration:10000
-   //          })
-
-   //        HistoryService.insertQuiz({
-   //          userId:this.user.id,
-   //          examId:this.$route.params.id,
-   //          score:scoreRating.toFixed(2),
-   //        });
-
-  	// 		}
   		},
 
   		computed:{
