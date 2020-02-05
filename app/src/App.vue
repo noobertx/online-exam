@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    <nprogress-container></nprogress-container>
     <div class="container">      
       <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="#">Online Exam</a>
@@ -31,6 +30,7 @@
         </div>
       </nav>
     <router-view></router-view>
+    <vue-progress-bar></vue-progress-bar>
     </div>
 
   </div>
@@ -39,24 +39,41 @@
 <script>
 // import MembersComponent from './components/MembersComponent.vue'
 // import QuestionsComponent from './components/QuestionsComponent.vue'
-import NprogressContainer from 'vue-nprogress/src/NprogressContainer'
+
 export default {
   name: 'app',
-  components: {
-    NprogressContainer
-  },
+ 
   methods:{
     isLoggedIn(){
 
       return false;
     }
   },
-  async created(){
-    // this.$store.commit('loadTokens');
+  created () {
+    //  [App.vue specific] When App.vue is first loaded start the progress bar
+    this.$Progress.start()
+    //  hook the progress bar to start before we move router-view
+    this.$router.beforeEach((to, from, next) => {
+      //  does the page we want to go to have a meta.progress object
+      if (to.meta.progress !== undefined) {
+        let meta = to.meta.progress
+        // parse meta tags
+        this.$Progress.parseMeta(meta)
+      }
+      //  start the progress bar
+      this.$Progress.start()
+      //  continue to next page
+      next()
+    })
+    //  hook the progress bar to finish after we've finished moving router-view
+    this.$router.afterEach((to, from) => {
+      //  finish the progress bar
+      this.$Progress.finish()
+    })
   },
 
   mounted(){
-    
+    this.$Progress.finish()
     this.$store.getters.getAccessToken;
   }
 }

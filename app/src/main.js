@@ -1,7 +1,7 @@
 
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import NProgress from 'vue-nprogress'
+
 import App from './App.vue'
 import {store} from './stores/store'
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -10,53 +10,178 @@ import 'font-awesome/css/font-awesome.min.css'
 import axios from 'axios';
 import VueToast from 'vue-toast-notification';
 import 'vue-toast-notification/dist/index.css';
+import VueProgressBar from 'vue-progressbar'
 
 
 Vue.config.productionTip = false
 Vue.use(VueRouter)
 const options = {
-  latencyThreshold: 100, // Number of ms before progressbar starts showing, default: 100,
-  router: true, // Show progressbar when navigating routes, default: true
-  http: false // Show progressbar when doing Vue.http, default: true
-};
-Vue.use(NProgress, options)
+  color: '#bffaf3',
+  failedColor: '#874b4b',
+  thickness: '5px',
+  transition: {
+    speed: '0.2s',
+    opacity: '0.6s',
+    termination: 300
+  },
+  autoRevert: true,
+  location: 'left',
+  inverse: false
+}
 
-const nprogress = new NProgress({ parent: '.nprogress-container' })
+Vue.use(VueProgressBar, options)
 
 
 const routes = [
-  { path: '/sign-up', component:require("./components/auth/signUp.vue").default },
-  { path: '/login', component:require("./components/auth/Login.vue").default },
-  { path: '/members', component:require("./components/MembersComponent.vue").default },
-  { path: '/members/:id', component:require("./components/MembersItemComponent.vue").default },
-  { path: '/myprofile', component:require("./components/MyProfile.vue").default },
-  { path: '/profiles/:id', component:require("./components/UserProfile.vue").default },
-  { path: '/members/add', component:require("./components/MembersItemComponent.vue").default },
+  { path: '/sign-up', component:require("./components/auth/signUp.vue").default,
+    meta: {
+      progress: {
+        func: [
+          {call: 'color', modifier: 'temp', argument: '#ffb000'},
+          {call: 'fail', modifier: 'temp', argument: '#6e0000'},
+          {call: 'location', modifier: 'temp', argument: 'top'},
+          {call: 'transition', modifier: 'temp', argument: {speed: '1.5s', opacity: '0.6s', termination: 400}}
+        ]
+      }
+    }
+   },
+  { path: '/login', component:require("./components/auth/Login.vue").default,
+    meta: {
+      progress: {
+        func: [
+          {call: 'color', modifier: 'temp', argument: '#ffb000'},
+          {call: 'fail', modifier: 'temp', argument: '#6e0000'},
+          {call: 'location', modifier: 'temp', argument: 'top'},
+          {call: 'transition', modifier: 'temp', argument: {speed: '1.5s', opacity: '0.6s', termination: 400}}
+        ]
+      }
+    }
+   },
+  { path: '/members', component:require("./components/MembersComponent.vue").default,
+    meta: {
+      progress: {
+        func: [
+          {call: 'color', modifier: 'temp', argument: '#ffb000'},
+          {call: 'fail', modifier: 'temp', argument: '#6e0000'},
+          {call: 'location', modifier: 'temp', argument: 'top'},
+          {call: 'transition', modifier: 'temp', argument: {speed: '1.5s', opacity: '0.6s', termination: 400}}
+        ]
+      }
+    }
+   },
+  { path: '/members/:id', component:require("./components/MembersItemComponent.vue").default,
+    meta: {
+      progress: {
+        func: [
+          {call: 'color', modifier: 'temp', argument: '#ffb000'},
+          {call: 'fail', modifier: 'temp', argument: '#6e0000'},
+          {call: 'location', modifier: 'temp', argument: 'top'},
+          {call: 'transition', modifier: 'temp', argument: {speed: '1.5s', opacity: '0.6s', termination: 400}}
+        ]
+      }
+    }
+   },
+  { path: '/myprofile', component:require("./components/MyProfile.vue").default,
+    meta: {
+      progress: {
+        func: [
+          {call: 'color', modifier: 'temp', argument: '#ffb000'},
+          {call: 'fail', modifier: 'temp', argument: '#6e0000'},
+          {call: 'location', modifier: 'temp', argument: 'top'},
+          {call: 'transition', modifier: 'temp', argument: {speed: '1.5s', opacity: '0.6s', termination: 400}}
+        ]
+      }
+    }
+   },
+  { path: '/profiles/:id', component:require("./components/UserProfile.vue").default,
+    meta: {
+      progress: {
+        func: [
+          {call: 'color', modifier: 'temp', argument: '#ffb000'},
+          {call: 'fail', modifier: 'temp', argument: '#6e0000'},
+          {call: 'location', modifier: 'temp', argument: 'top'},
+          {call: 'transition', modifier: 'temp', argument: {speed: '1.5s', opacity: '0.6s', termination: 400}}
+        ]
+      }
+    }
+   },
+  { path: '/members/add', component:require("./components/MembersItemComponent.vue").default,
+    meta: {
+      progress: {
+        func: [
+          {call: 'color', modifier: 'temp', argument: '#ffb000'},
+          {call: 'fail', modifier: 'temp', argument: '#6e0000'},
+          {call: 'location', modifier: 'temp', argument: 'top'},
+          {call: 'transition', modifier: 'temp', argument: {speed: '1.5s', opacity: '0.6s', termination: 400}}
+        ]
+      }
+    }
+   },
   { path: '/quizzes', component:require("./components/QuizzesComponent.vue").default ,meta: 
     { 
       requiresAuth: true,
+      progress: {
+        func: [
+          {call: 'color', modifier: 'temp', argument: '#ffb000'},
+          {call: 'fail', modifier: 'temp', argument: '#6e0000'},
+          {call: 'location', modifier: 'temp', argument: 'top'},
+          {call: 'transition', modifier: 'temp', argument: {speed: '1.5s', opacity: '0.6s', termination: 400}}
+        ]
+      }
 
     }
   },
   { path: '/quizzes/add', component:require("./components/QuizItemComponent.vue").default ,meta: 
     { 
       requiresAuth: true,
+      progress: {
+        func: [
+          {call: 'color', modifier: 'temp', argument: '#ffb000'},
+          {call: 'fail', modifier: 'temp', argument: '#6e0000'},
+          {call: 'location', modifier: 'temp', argument: 'top'},
+          {call: 'transition', modifier: 'temp', argument: {speed: '1.5s', opacity: '0.6s', termination: 400}}
+        ]
+      }
 
     }
   },
   { path: '/quizzes/:id', component:require("./components/QuizItemComponent.vue").default ,
     meta:{ 
       requiresAuth: true,
+      progress: {
+        func: [
+          {call: 'color', modifier: 'temp', argument: '#ffb000'},
+          {call: 'fail', modifier: 'temp', argument: '#6e0000'},
+          {call: 'location', modifier: 'temp', argument: 'top'},
+          {call: 'transition', modifier: 'temp', argument: {speed: '1.5s', opacity: '0.6s', termination: 400}}
+        ]
+      }
     }
   },
   { path: '/quiz-listings/', component:require("./components/frontend/QuizListings.vue").default ,
     meta:{ 
       requiresAuth: true,
+      progress: {
+        func: [
+          {call: 'color', modifier: 'temp', argument: '#ffb000'},
+          {call: 'fail', modifier: 'temp', argument: '#6e0000'},
+          {call: 'location', modifier: 'temp', argument: 'top'},
+          {call: 'transition', modifier: 'temp', argument: {speed: '1.5s', opacity: '0.6s', termination: 400}}
+        ]
+      }
     }
   },
   { path: '/take-quiz/:id', component:require("./components/frontend/TakeQuiz.vue").default ,
     meta:{ 
       requiresAuth: true,
+      progress: {
+        func: [
+          {call: 'color', modifier: 'temp', argument: '#ffb000'},
+          {call: 'fail', modifier: 'temp', argument: '#6e0000'},
+          {call: 'location', modifier: 'temp', argument: 'top'},
+          {call: 'transition', modifier: 'temp', argument: {speed: '1.5s', opacity: '0.6s', termination: 400}}
+        ]
+      }
     }
   },
   // { path: '/questions', component:require("./components/QuestionsComponent.vue").default }
@@ -95,7 +220,6 @@ const router = new VueRouter({
 
 new Vue({
 	router,
-  nprogress,
   store: store,
   render: h => h(App),
 }).$mount('#app')

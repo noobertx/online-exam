@@ -77,6 +77,7 @@
 	</div>
 </template>
 <script>
+  
   import { mapState, mapActions } from 'vuex'
   import Vue from 'vue'
   import VueToast from 'vue-toast-notification';
