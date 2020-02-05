@@ -107,7 +107,7 @@ const actions = {
 							if(q.isPerCorrectAnswer=="false"){
 								state.user.overall += parseFloat(score)
 							}else{
-								state.user.overall += parseFloat(q.points)
+								
 							}
 						})
 					}else if(q.type=="fill-in-the-blanks"){
@@ -121,14 +121,19 @@ const actions = {
                       		if(i.answer==q.correctAnswer){
                       			state.user.score+= parseFloat(q.points)
                       		}
-                      		state.user.overall += parseFloat(q.points)
+                      		
+                      	}
+					}else{
+						if(i.answer==q.correctAnswer){
+                        	state.user.score += parseFloat(q.points);
                       	}
 					}
+                    state.user.overall += parseFloat(q.points)
 				}
 			})
 		})
 
-		var scoreRating = ((state.user.score/state.user.overall)*100).toFixed(2)
+		state.user.scoreRating = ((state.user.score/state.user.overall)*100).toFixed(2)
 		console.log(state.user);
 
 	}
