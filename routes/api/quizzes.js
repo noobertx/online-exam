@@ -1,90 +1,28 @@
 const express = require('express');
-const mongodb = require('mongodb');
-const multer = require('multer');
-const uuid = require('uuid');
-const upload = multer();
 const router = express.Router();
-const ObjectId = require('mongodb').ObjectID
-// const quizzes = require("../../Members");
+const multer = require('multer');
+const upload = multer();
 
-router.get('/', async (req,res)=>{	
-	// res.json(quizzes) 
-	const quizzes = await loadQuizzesCollection();
-	res.send(await quizzes.find({}).toArray());
+const Quiz = require("../../services/Quiz.services");
+router.get('/',function(req,res){
+	Quiz.getAllQuiz(req,res);
 })
 
-//Get Single member
-router.get('/:id',async (req,res)=>{	
-	const quizzes = await loadQuizzesCollection();
-	res.send(await quizzes.find({_id:new mongodb.ObjectID(req.params.id)}).toArray());	
+router.get('/:id',function(req,res){
+	Quiz.getQuizById(req,res);
 })
 
-// Create Member
-router.post('/', upload.none(),async (req,res)=>{
-	const quizzes = await loadQuizzesCollection();
-	const result = await quizzes.insertOne({
-		examId:uuid.v4(),
-		title:req.body.quizData.title,
-		items:req.body.quizData.items,
-		wrong:req.body.quizData.wrong,
-		total:req.body.quizData.total,
-		time:req.body.quizData.time,
-		intro:req.body.quizData.intro,
-		tag:req.body.quizData.tag,
-		quizItems:req.body.quizItems,
-		settings:req.body.settings,
-		meta:req.body.meta,
-		date: new Date()
-	})
-
-
-	res.status(201).send(result.insertedId.toString());
+router.post('/',upload.none(),function(req,res){
+	Quiz.createQuiz(req,res);
 })
 
-// Update Member
+router.put('/:id',function(req,res){
 
-router.put('/:id',upload.none(),async (req,res)=>{	
-	const quizzes = await loadQuizzesCollection();
-	await quizzes.updateOne({_id:ObjectId(req.body.quizData._id)},{
-			$set:{				
-				title:req.body.quizData.title,
-				items:req.body.quizData.items,
-				wrong:req.body.quizData.wrong,
-				total:req.body.quizData.total,
-				time:req.body.quizData.time,
-				intro:req.body.quizData.intro,
-				tag:req.body.quizData.tag,
-				quizItems:req.body.quizItems,
-				settings:req.body.settings,
-				meta:req.body.meta,
-			}
-		})
-
-
-	res.status(201).send();
+	Quiz.updateQuizById(req,res);
 })
 
-// Delete Member
 
-router.delete('/:id',async (req,res)=>{	
-
-	const quizzes = await loadQuizzesCollection();
-
-	await quizzes.deleteOne({_id:new mongodb.ObjectID(req.params.id)});
-
-	res.status(200).send();
-
+router.delete('/:id',upload.none(),async (req,res)=>{	
+	Quiz.deleteQuiz(req,res);
 })
-//mongodb://heroku_kzkgjmk7:ev0eenrv4jlevttct59op312ub@ds259878.mlab.com:59878/heroku_kzkgjmk7
-async function loadQuizzesCollection(){
-	const client = await mongodb.MongoClient.connect("mongodb+srv://admin_noobert23:DevSpades1523@onlineexam-id1lr.mongodb.net/online-exam?authSource=admin&replicaSet=OnlineExam-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true",{
-		useNewUrlParser:true,
-		useCreateIndex:true,
-		useFindAndModify:false,
-	})
-
-	// return client.db('OnlineExam').collection('users')
-	return client.db('online-exam').collection('quiz')
-
-}
 module.exports = router;

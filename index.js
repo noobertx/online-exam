@@ -14,7 +14,6 @@ const multer = require('multer');
 const upload = multer();
 
 
-const Quiz = require("./services/Quiz.services");
 // const Users = require("./models/user");
 // const Quiz = require("./models/quiz");
 // const Quiz = require("./models/quiz");
@@ -38,28 +37,14 @@ app.use(express.urlencoded({extended:false}));
 // app.use('/api/login',require('./routes/api/login'));
 // app.use('/api/members',require('./routes/api/members'));
 // app.use('/api/questions',require('./routes/api/questions'));
-// app.use('/api/quizzes',require('./routes/api/quizzes'));
+app.use('/api/quiz',require('./routes/api/quizzes'));
 // app.use('/api/history',require('./routes/api/history'));
 // var db = mongoose.connection;
 
 
 app.get('/',function(res,req){})
 
-app.get('/api/quiz',function(req,res){
-	Quiz.getAllQuiz(req,res);
-})
 
-app.get('/api/quiz/:id',function(req,res){
-	Quiz.getQuizById(req,res);
-})
-
-app.post('/api/quiz',upload.none(),function(req,res){
-	Quiz.createQuiz(req,res);
-})
-
-app.delete('/api/quiz/:id',upload.none(),async (req,res)=>{	
-	Quiz.deleteQuiz(req,res);
-})
 
 //User Authentication
 
