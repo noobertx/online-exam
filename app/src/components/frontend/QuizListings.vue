@@ -11,10 +11,11 @@
 			</thead>
 			<tbody>
 				<tr v-for="(quiz,index) in quizzes">
+
 					<td><a :href="'#/take-quiz/'+quiz._id">{{quiz.title}}</a></td>
-					<td>{{quiz.time}}</td>
-					<td>{{quiz.items}}</td>
-					<td>{{quiz.total}}</td>
+					<td>{{quiz.settings.time}}</td>
+					<td>{{quiz.quizItems.length}}</td>
+					<td>{{getTotalPoints(quiz)}}</td>
 				</tr>
 			</tbody>
 		</table>
@@ -35,5 +36,14 @@
       			this.error = err.message;
     		}
   		},
+  		methods:{
+  			getTotalPoints(quiz){
+  				var points = 0 ;
+      			for(var i=0;i<quiz.quizItems.length;i+=1){
+        				points += parseInt(quiz.quizItems[i].points)
+      			}
+      			return points;
+  			}
+  		}
 	}
 </script>
