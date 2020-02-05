@@ -29,13 +29,7 @@
     <p class="small">{{timer}}</p> 
 
 
-    <ul class="pagination">
-      <li class="page-item"><a class="page-link" @click="currentPage = (currentPage>0) ? currentPage -= 1 : currentPage">Previous</a></li>
-      <li class="page-item" v-for="(item,index) in paginatedItems">
-        <a class="page-link" @click="currentPage=index">{{(index+1)}}</a>
-      </li>
-      <li class="page-item"><a class="page-link" @click = "currentPage = (currentPage < paginatedItems.length-1) ? currentPage+=1 : currentPage " >Next</a></li>
-    </ul>
+    
 
     <div class="row" v-for="(item,index) in paginatedItems[currentPage]">
       <div class="col-md-12">
@@ -62,7 +56,15 @@
       </div>
       </div>
 
-		<button class="btn btn-success btn-block" @click="checkResults" v-if="canDisplay">Submit</button>
+      <ul class="pagination text-center">
+      <li class="page-item"><a class="page-link" v-if="currentPage!=0" @click="currentPage = (currentPage>0) ? currentPage -= 1 : currentPage">Previous</a></li>
+      <li class="page-item" v-for="(item,index) in paginatedItems">
+        <a class="page-link" @click="currentPage=index">{{(index+1)}}</a>
+      </li>
+      <li class="page-item"><a class="page-link" @click = "currentPage = (currentPage < paginatedItems.length-1) ? currentPage+=1 : currentPage " v-if="currentPage!=paginatedItems.length-1">Next</a></li>
+    </ul>
+
+		<button class="btn btn-success btn-block" @click="checkResults" v-if="canDisplay && currentPage==paginatedItems.length-1">Submit</button>
     </div>
     <div v-else>
       <div v-for="(item,index) in status" class="text-center">        
