@@ -129,6 +129,7 @@ const actions = {
 		})
 
 		var scoreRating = ((state.user.score/state.user.overall)*100).toFixed(2)
+		console.log(state.user);
 
 	}
 }
@@ -144,6 +145,7 @@ const mutations = {
 				answer:[]
 			}
 		})
+
 	},
 	updateAnswer(state,index){
 		if(state.quiz.quizItems[index].type=="multiple-choice"){

@@ -1,5 +1,6 @@
 <template>
 	<div class="container">
+    <vue-progress-bar></vue-progress-bar>
     <div v-if="page=='init'">
       <h1  class="text-center">{{quiz.title}}</h1>
       <p  class="text-center">{{quiz.intro}}</p>
@@ -42,7 +43,7 @@
         <ul v-for="(option,optIndex) in item.options" v-else class="list-group mb-3">
           <li class="list-group-item">
             <label v-if="item.type=='single-choice-r'">
-              <input type="radio" :value = "option.cid" v-model="user.quizPaper[index].answer" @input="test(index)">
+              <input type="radio" :value = "option.cid" v-model="user.quizPaper[index].answer" @input="setAnswer(index)">
               {{option.text}}
             </label>
             <label v-if="item.type=='multiple-choice'">
@@ -77,13 +78,15 @@
 	</div>
 </template>
 <script>
-  
+
   import { mapState, mapActions } from 'vuex'
   import Vue from 'vue'
   import VueToast from 'vue-toast-notification';
 import 'vue-toast-notification/dist/index.css';
 	import QuizService from '../../QuizItemService'
   import HistoryService from '../../services/HistoryService'
+
+
 
   Vue.use(VueToast);
 	export default{
@@ -95,7 +98,7 @@ import 'vue-toast-notification/dist/index.css';
           canDisplay:false,
           availableTimer:"",
           expireTimer:"",
-          itemsPerPage:1,
+          itemsPerPage:4,
           paginatedItems:[],
           currentPage:0
     		}
@@ -122,14 +125,10 @@ import 'vue-toast-notification/dist/index.css';
 
                 this.generateQuizPaper();
                 this.paginateItems(this.quiz.quizItems);
+
   		},
   		methods:{
-        ...mapActions('quizPaper',[
-        'generateQuizPaper',
-        'setAnswer',
-        'renderCountDownTimer',
-        'checkResults'
-        ]),
+        
 
       isExpired(){      
         if(this.quiz.settings.canExpire){
@@ -212,6 +211,16 @@ import 'vue-toast-notification/dist/index.css';
           'seconds': seconds
         };
       },
+
+      checkResults(){
+        // console.log(this.$store);
+        this.$store.dispatch('quizPaper/checkResults')
+      },
+      ...mapActions('quizPaper',[
+        'generateQuizPaper',
+        'setAnswer',
+        'renderCountDownTimer',
+        ])
   		},
 
   		computed:{
