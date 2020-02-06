@@ -33,7 +33,7 @@ exports.getAllQuiz = async(req,res)=>{
 			
 			// 1b) Advance Filtering
 			let queryStr = JSON.stringify(queryObj)
-			queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g math=> `$${match}`)
+			queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match=> `$${match}`)
 			
 			this.query = this.query.find(JSON.parse(queryStr))
 			return this;
@@ -41,7 +41,7 @@ exports.getAllQuiz = async(req,res)=>{
 
 		sort(){
 			if(this.queryString.sort){
-				const sortBy = this.queryString.sort.split(,).join(' ');
+				const sortBy = this.queryString.sort.split(",").join(' ');
 				this.query = this.query.sort(sortBy)
 				// sort('sortBy')
 			}else{
@@ -52,7 +52,7 @@ exports.getAllQuiz = async(req,res)=>{
 
 		limitFields(){
 			if(this.queryString.fields){
-				const fields = this.queryString.fields.split(,).join(' ');
+				const fields = this.queryString.fields.split(",").join(' ');
 				this.query = this.query.select(fields)
 			}else{
 				this.query = this.query.select('-__v')		
