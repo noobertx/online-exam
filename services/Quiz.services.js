@@ -38,10 +38,21 @@ exports.getAllQuiz = async(req,res)=>{
 			this.query = this.query.find(JSON.parse(queryStr))
 			return this;
 		}
+
+		sort(){
+			if(this.queryString.sort){
+				const sortBy = this.queryString.sort.split(,).join(' ');
+				this.query = this.query.sort(sortBy)
+				// sort('sortBy')
+			}else{
+				this.query = this.query.sort('-createdAt')	
+			}
+			return this;
+		}
 	}
 
 	try{		
-	const features = new QuizAPIFeatures(Quiz.find(),req.query).filter();
+	const features = new QuizAPIFeatures(Quiz.find(),req.query).filter().sort();
 	const quiz = await features.query
 	// const quiz = await Quiz.find();
 	res.status(200).json(quiz)
