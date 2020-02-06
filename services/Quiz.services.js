@@ -49,10 +49,20 @@ exports.getAllQuiz = async(req,res)=>{
 			}
 			return this;
 		}
+
+		limitFields(){
+			if(this.queryString.fields){
+				const fields = this.queryString.fields.split(,).join(' ');
+				this.query = this.query.select(fields)
+			}else{
+				this.query = this.query.select('-__v')		
+			}
+			return this;
+		}
 	}
 
 	try{		
-	const features = new QuizAPIFeatures(Quiz.find(),req.query).filter().sort();
+	const features = new QuizAPIFeatures(Quiz.find(),req.query).filter().sort().limitFields();
 	const quiz = await features.query
 	// const quiz = await Quiz.find();
 	res.status(200).json(quiz)
