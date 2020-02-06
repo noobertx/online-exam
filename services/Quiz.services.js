@@ -59,10 +59,24 @@ exports.getAllQuiz = async(req,res)=>{
 			}
 			return this;
 		}
+
+		paginate(){
+			const page = this.queryString.page *1 || 1;
+			const limit = this.queryString.limit *1 || 100;
+			const skip = (page -1) * limit;
+			this.query = this.query.skip(skip).limit(limit);			
+				//if(this.queryString.page){
+				//	const numTours = await Tour.countDocuments();
+				//	if(skip >= numTours){
+				//		throw new Error('This page does not exist');
+				//	}
+				//}
+			return this;
+		}
 	}
 
 	try{		
-	const features = new QuizAPIFeatures(Quiz.find(),req.query).filter().sort().limitFields();
+	const features = new QuizAPIFeatures(Quiz.find(),req.query).filter().sort().limitFields().paginate();
 	const quiz = await features.query
 	// const quiz = await Quiz.find();
 	res.status(200).json(quiz)
