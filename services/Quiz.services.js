@@ -1,12 +1,8 @@
 const Quiz = require("./../models/quiz.js");
 const ObjectId = require('mongodb').ObjectID
 const AppError = require("./appError");
+const catchAsync = require("./catchAsync.service");
 
-const catchAsync = fn => {
-	return (req,res,next)=>{
-		fn(req,res,next).catch(next);
-	}
-}
 
 exports.createQuiz = catchAsync( async (req,res,next)=>{
 	const newQuiz = await Quiz.create(req.body.quiz)

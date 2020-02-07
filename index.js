@@ -33,6 +33,7 @@ app.use(express.urlencoded({extended:false}));
 // app.use('/api/members',require('./routes/api/members'));
 // app.use('/api/questions',require('./routes/api/questions'));
 app.use('/api/quiz',require('./routes/api/quizzes'));
+app.use('/api/user',require('./routes/api/user.api.js'));
 // app.use('/api/history',require('./routes/api/history'));
 // var db = mongoose.connection;
 
