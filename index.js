@@ -1,4 +1,4 @@
-require('dotenv').config()
+
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
@@ -6,13 +6,13 @@ const path = require("path");
 const exphbs = require("express-handlebars");
 const logger = require("./middleware/Logger");
 const members = require("./Members");
-const jwt = require("jsonwebtoken");
+
 const mongoose = require("mongoose");
 const app = express();
 
 const multer = require('multer');
 const upload = multer();
-
+const User = require("./services/User.services");
 
 // const Users = require("./models/user");
 // const Quiz = require("./models/quiz");
@@ -44,6 +44,10 @@ app.use('/api/quiz',require('./routes/api/quizzes'));
 
 app.get('/',function(res,req){})
 
+app.post('/api/login',(req,res)=>{
+	User.login(req,res);
+})
+
 
 
 //User Authentication
@@ -66,36 +70,7 @@ const posts =[
 let refreshTokens = []
 
 
-// app.post('/login',(req,res)=>{
-// 	const username = req.body.username
-// 	const user = {name:username	}
-// 	const accessToken =  generateAccessToken(user);
-// 	const refreshToken =  jwt.sign(user,process.env.REFRESH_TOKEN_SECRET);
-// 	refreshTokens.push(refreshToken);
-// 	res.json({accessToken:accessToken,refreshToken:refreshToken});
-// });
 
-// app.delete('/logout',(req,res)=>{
-// 	console.log(refreshTokens)
-// 	console.log(req.body.token)
-// 	refreshTokens = refreshTokens.filter(token=>token !== req.body.token)
-// 	res.sendStatus(204);
-// })
-// function authenticateToken(req,res,next){
-// 	const authHeader = req.headers['authorization'];
-// 	const token = authHeader &&  authHeader.split(" ")[1];
-// 	if(token == null) return res.sendStatus(401)
-// 		jwt.verify(token,process.env.ACCESS_TOKEN_SECRET,(err,user)=>{
-// 			if(err)	 return res.sendStatus(403)			
-// 			req.user = user
-// 			next()
-// 		})
-// }
-
-// function generateAccessToken(user){
-// 	return jwt.sign(user,process.env.ACCESS_TOKEN_SECRET,{expiresIn:'30sec'});
-// }
-//
 // Handle Production
 if(process.env.NODE_ENV==='production'){
 	app.use(express.static(__dirname+'/public/'));
@@ -103,6 +78,14 @@ if(process.env.NODE_ENV==='production'){
 }
 
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5555;
+
+
+app.all("*",(req,res,next)=>{
+	res.status(404).json({
+		status:'fail',
+		message:`Can't fid ${req.originalUrl} on this server! `
+	});
+});
 
 app.listen(PORT,() => console.log(`Server started on port ${PORT}`));

@@ -133,3 +133,83 @@ exports.updateQuizById = async(req,res)=>{
 		})
 	}
 }
+
+/*
+	router.route('tour-stats').get(tourController.getTourStats);
+*/
+
+/*
+
+
+exports.getTourStats = async(req,res) =>{
+	try{
+		const stats = await Tour.aggregate([
+			{
+				$match : {ratingsAverage : {$gta :4.5}}
+			},
+			{
+				$group:{
+					_id:null,
+					num:{ $sum : '$ratingsQuantity'},
+					numRatings:{ $sum : '$ratingsQuantity'},
+					avgRating:{ $avg : '$ratingsAverage'},
+					avgPrice:{ $avg : '$price'},
+					minPrice:{ $min : '$price'},
+					maxPrice:{ $max : '$price'},
+				}
+			},{
+				$sort :{
+					avgPrice : 1
+				}
+			}
+		]);
+	}catch(err){
+		res.status(404).json({
+			status:'fail',
+			message:err
+		})
+	}
+}
+
+exports.getMonthlyPlan = async(req,res) => {
+	try{
+		const year = req.params.year * 1
+		const plan = await Tour.aggregate([
+			{
+				$unwind:'$startDates'
+			},
+			{
+				$match : {startDates : {
+						$gte : new Date(`${year}-01-01`),
+						$lte : new Date(`${year}-12-31`)
+					}
+				}
+			},
+			{
+				$group:{
+					_id:{$month:'$startDates'},
+					numTour:{$sum:1},
+					tours : { $push : '$name'}
+				}
+			},{
+				$addField: {month : '$_id'}
+			},
+			{
+				$project:{
+					_id:0
+				}
+			},
+			{
+				$sort:{
+					numTourStarts:-1
+				}
+			}
+		])
+	}catch(err){
+		res.status(404).json({
+			status:'fail',
+			message:err
+		})
+	}
+}
+*/
