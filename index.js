@@ -13,6 +13,9 @@ const app = express();
 const multer = require('multer');
 const upload = multer();
 const User = require("./services/User.services");
+const GlobalErrorHandler = require("./services/error.services");
+const AppError = require("./services/appError");
+
 
 // const Users = require("./models/user");
 // const Quiz = require("./models/quiz");
@@ -78,14 +81,14 @@ if(process.env.NODE_ENV==='production'){
 }
 
 
-const PORT = process.env.PORT || 5555;
-
+const PORT = process.env.PORT || 5000;
 
 app.all("*",(req,res,next)=>{
-	res.status(404).json({
-		status:'fail',
-		message:`Can't fid ${req.originalUrl} on this server! `
-	});
+	next(new AppError(`Cant' find ${req.originalUrl} on this server`,404));
 });
+
+app.use(GlobalErrorHandler)
+
+
 
 app.listen(PORT,() => console.log(`Server started on port ${PORT}`));

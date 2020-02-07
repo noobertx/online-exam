@@ -1,26 +1,23 @@
 const Quiz = require("./../models/quiz.js");
 const ObjectId = require('mongodb').ObjectID
-exports.createQuiz = async (req,res)=>{
-	try{
-		const newQuiz = await Quiz.create(req.body.quiz)
+
+const catchAsync = fn => {
+	return (req,res,next)=>{
+		fn(req,res,next).catch(next);
+	}
+}
+
+exports.createQuiz = catchAsync( async (req,res,next)=>{
+	const newQuiz = await Quiz.create(req.body.quiz)
 		res.status(201).json({
 			status:'success',
 			data:{
-				quiz:newQuiz
-			}	
-		})
-	}catch(err){
-		res.status(400).json({
-			status:'fail',
-			message:err
-		})
-	}	
-}
+			quiz:newQuiz
+		}	
+	})	
+})
 
-exports.getAllQuiz = async(req,res)=>{
-	
-
-	class QuizAPIFeatures{
+class QuizAPIFeatures{
 		constructor(query,queryString){
 			this.query=query;
 			this.queryString=queryString;
@@ -75,6 +72,8 @@ exports.getAllQuiz = async(req,res)=>{
 		}
 	}
 
+exports.getAllQuiz = catchAsync( async(req,res,next)=>{
+	
 	try{		
 	const features = new QuizAPIFeatures(Quiz.find(),req.query).filter().sort().limitFields().paginate();
 	const quiz = await features.query
@@ -86,9 +85,9 @@ exports.getAllQuiz = async(req,res)=>{
 			message:err
 		})
 	}
-}
+})
 
-exports.getQuizById = async(req,res)=>{
+exports.getQuizById =  catchAsync(async(req,res,next)=>{
 	try{		
 	const quiz = await Quiz.findOne({_id:req.params.id});
 	res.status(200).json(quiz)
@@ -98,9 +97,9 @@ exports.getQuizById = async(req,res)=>{
 			message:err
 		})
 	}
-}
+})
 
-exports.deleteQuiz = async(req,res)=>{
+exports.deleteQuiz =  catchAsync(async(req,res,next)=>{
 	try{		
 	const quiz = await Quiz.deleteOne({_id:req.params.id});
 	res.status(200).json(quiz)
@@ -110,9 +109,9 @@ exports.deleteQuiz = async(req,res)=>{
 			message:err
 		})
 	}
-}
+})
 
-exports.updateQuizById = async(req,res)=>{
+exports.updateQuizById =  catchAsync(async(req,res,next)=>{
 	try{		
 	const body = req.body.quiz
 	console.log(body);
@@ -132,7 +131,7 @@ exports.updateQuizById = async(req,res)=>{
 			message:err
 		})
 	}
-}
+})
 
 /*
 	router.route('tour-stats').get(tourController.getTourStats);
