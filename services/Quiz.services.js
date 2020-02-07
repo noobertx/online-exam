@@ -90,8 +90,8 @@ exports.getAllQuiz = catchAsync( async(req,res,next)=>{
 	}
 })
 
-exports.getQuizById =  catchAsync(async(req,res,next)=>{
-	const quiz = await Quiz.findOne({_id:req.params.id});
+exports.getQuizById =  catchAsync( async (req,res,next) => {
+	const quiz = await Quiz.findById(req.params.id);
 	if(!quiz){
 		return next(new AppError('No quiz Found With that ID',404));
 	}
