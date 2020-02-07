@@ -21,15 +21,7 @@ const AppError = require("./services/appError");
 // const Quiz = require("./models/quiz");
 // const Quiz = require("./models/quiz");
 // app.use(logger);
-mongoose.connect("mongodb+srv://admin_noobert23:DevSpades1523@onlineexam-id1lr.mongodb.net/online-exam?authSource=admin&replicaSet=OnlineExam-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true",(err)=>{
-
-	if(!err){
-		console.log("Server connected to mongodb")
-	}else{
-		console.log("Error :Server connected to mongodb")
-
-	}
-});
+mongoose.connect("mongodb+srv://admin_noobert23:DevSpades1523@onlineexam-id1lr.mongodb.net/online-exam?authSource=admin&replicaSet=OnlineExam-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true").then(()=>console.log("DB Connection Successful")).catch(err=>console.log("ERROR"));
 
 // Body Parse Middleware
 app.use(bodyParser.json());
@@ -88,7 +80,18 @@ app.all("*",(req,res,next)=>{
 });
 
 app.use(GlobalErrorHandler)
+const server = app.listen(PORT,() => console.log(`Server started on port ${PORT}`));
 
 
-
-app.listen(PORT,() => console.log(`Server started on port ${PORT}`));
+// process.on('unhandledRejection',err=>{
+// 	console.log(err.name,err.message);
+// 	server.close(()=>{
+// 		process.exit(1)
+// 	})
+// })
+// process.on('uncaughtException',err=>{
+// 	console.log(err.name,err.message);
+// 	server.close(()=>{
+// 		process.exit(1)
+// 	})
+// })
