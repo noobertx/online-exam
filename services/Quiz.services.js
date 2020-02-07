@@ -104,21 +104,17 @@ exports.getQuizById =  catchAsync( async (req,res,next) => {
 })
 
 exports.deleteQuiz =  catchAsync(async(req,res,next)=>{
-	try{		
+		
 	const quiz = await Quiz.deleteOne({_id:req.params.id});
-	res.status(200).json(quiz)
-	}catch(err){
-		res.status(404).json({
-			status:'fail',
-			message:err
-		})
+	if(!quiz){
+		return next(new AppError('No quiz Found With that ID',404));
 	}
+	res.status(200).json(quiz)
+
 })
 
-exports.updateQuizById =  catchAsync(async(req,res,next)=>{
-	try{		
+exports.updateQuizById =  catchAsync(async(req,res,next)=>{	
 	const body = req.body.quiz
-	console.log(body);
 	const quiz = await Quiz.updateOne({_id:req.params.id},{
 		$set:{
 			title:body.title,
@@ -128,13 +124,10 @@ exports.updateQuizById =  catchAsync(async(req,res,next)=>{
 			meta:body.meta
 		}
 	});
-	res.status(200).json(quiz)
-	}catch(err){
-		res.status(404).json({
-			status:'fail',
-			message:err
-		})
+	if(!quiz){
+		return next(new AppError('No quiz Found With that ID',404));
 	}
+	res.status(200).json(quiz)	
 })
 
 /*
