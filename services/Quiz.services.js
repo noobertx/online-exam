@@ -1,5 +1,6 @@
 const Quiz = require("./../models/quiz.js");
 const ObjectId = require('mongodb').ObjectID
+const AppError = require("./appError");
 
 const catchAsync = fn => {
 	return (req,res,next)=>{
@@ -77,6 +78,8 @@ exports.getAllQuiz = catchAsync( async(req,res,next)=>{
 	try{		
 	const features = new QuizAPIFeatures(Quiz.find(),req.query).filter().sort().limitFields().paginate();
 	const quiz = await features.query
+
+	
 	// const quiz = await Quiz.find();
 	res.status(200).json(quiz)
 	}catch(err){
@@ -88,15 +91,16 @@ exports.getAllQuiz = catchAsync( async(req,res,next)=>{
 })
 
 exports.getQuizById =  catchAsync(async(req,res,next)=>{
-	try{		
 	const quiz = await Quiz.findOne({_id:req.params.id});
-	res.status(200).json(quiz)
-	}catch(err){
-		res.status(404).json({
-			status:'fail',
-			message:err
-		})
+	if(!quiz){
+		return next(new AppError('No quiz Found With that ID',404));
 	}
+	res.status(200).json({
+		status:'success',
+		data:{
+			quiz
+		}
+	})
 })
 
 exports.deleteQuiz =  catchAsync(async(req,res,next)=>{
