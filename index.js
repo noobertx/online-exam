@@ -79,8 +79,8 @@ const PORT = process.env.PORT || 5000;
 app.all("*",(req,res,next)=>{
 	next(new AppError(`Cant' find ${req.originalUrl} on this server`,404));
 });
-
 app.use(GlobalErrorHandler)
+
 const server = app.listen(PORT,() => console.log(`Server started on port ${PORT}`));
 
 
@@ -96,3 +96,6 @@ const server = app.listen(PORT,() => console.log(`Server started on port ${PORT}
 // 		process.exit(1)
 // 	})
 // })
+
+
+//Test Debug
