@@ -3,27 +3,24 @@ const router = express.Router();
 const multer = require('multer');
 const upload = multer();
 const authUser = require("../../services/auth-user.services");
+// const {getAllQuiz,getQuizById,deleteQuiz} = require("../../services/Quiz.services");
 
 const Quiz = require("../../services/Quiz.services");
-router.get('/',authUser.protect,function(req,res){
-	Quiz.getAllQuiz(req,res);
-})
+router.route("/")
+.get(authUser.protect,Quiz.getAllQuiz)
+.post(
+	upload.none(),
+	Quiz.createQuiz
+)
 
-router.get('/:id',function(req,res,next){
-	Quiz.getQuizById(req,res,next);
-})
+router.route("/:id")
+.get(authUser.protect,Quiz.getQuizById)
+.put(authUser.protect,Quiz.updateQuizById)
+.delete(
+	authUser.protect,
+	authUser.restrict,
+	upload.none(),
+	Quiz.deleteQuiz
+)
 
-router.post('/',upload.none(),function(req,res,next){
-	Quiz.createQuiz(req,res,next);
-})
-
-router.put('/:id',function(req,res,next){
-
-	Quiz.updateQuizById(req,res,next);
-})
-
-
-router.delete('/:id',upload.none(),async (req,res,next)=>{	
-	Quiz.deleteQuiz(req,res,next);
-})
 module.exports = router;
