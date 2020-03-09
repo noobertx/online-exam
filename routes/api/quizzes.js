@@ -18,7 +18,7 @@ router.route("/:id")
 .put(authUser.protect,Quiz.updateQuizById)
 .delete(
 	authUser.protect,
-	authUser.restrict,
+	authUser.restrictTo("admin"),
 	upload.none(),
 	Quiz.deleteQuiz
 )
