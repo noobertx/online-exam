@@ -58,7 +58,6 @@ exports.login = catchAsync(async(req,res,next) => {
 		return next(AppError("Incorrect email or password",401))
 	}
 
-	console.log(user);
 	const token = signToken(user._id)
 	res.status(200).json({
 		status:'success',
@@ -82,18 +81,18 @@ exports.protect  = catchAsync(async (req,res,next) => {
 	const decoded = await promisify(jwt.verify)(token, process.env.REFRESH_TOKEN_SECRET);	
 
 	// if user exists
-	const currentUser = await User.findbyId(decoded.id);
-	if(!currentUser){
+	const freshUser = await User.findById(decoded.id);
+	if(!freshUser){
 		return next(new AppError("the user belonging to this token no longer exists",401));
 	}
 
 	//user changed password after JWT was issued
 
-	if(currentUser.chagedPasswordAfter(decoded.iat)){
+	if(freshUser.changePasswordAfter(decoded.iat)){
 		return next(AppError('User recently chanaged password! Please Login again',401))
 	}
 
 	// Grants access to protected route
-	req.user = currentUser;
+	req.user = freshUser;
 	next()
 })
