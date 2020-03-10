@@ -5,7 +5,7 @@
 	"main": "index.js",
 	"scripts": {
 		"test": "echo Error no test specified && exit 1",
-		"start": "node index",
+		"start": "nodemon index",
 		"server": "nodemon index",
 		"debug": "ndb index.js",
 		"dev": "\"concurrently \"cd app && npm run serve\" \"nodemon index\""
@@ -27,6 +27,7 @@
 		"mongodb": "^3.4.1",
 		"mongoose": "^5.8.11",
 		"multer": "^1.4.2",
+		"nodemailer": "^6.4.4",
 		"uuid": "^3.3.3",
 		"validator": "^12.2.0"
 	},

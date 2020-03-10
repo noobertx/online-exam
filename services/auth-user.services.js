@@ -3,6 +3,7 @@ const User = require("./../models/user.js");
 const catchAsync = require("./catchAsync.service");
 const jwt = require("jsonwebtoken");
 const AppError = require("./appError")
+const sendEmail = require("./email");
 
 const signToken = id => {
 	return jwt.sign({id:id},process.env.REFRESH_TOKEN_SECRET,{
@@ -109,14 +110,41 @@ exports.restrictTo = (...roles) => {
 exports.forgotPassword =catchAsync(async (req,res,next)  => {
 	//get user by email
 	const user = await User.findOne({email:req.body.email})
+
+
 	if(!user){
 		return next(new AppError('No User found with that email',404))
 	}
 
 	// generate random reset token
-	const resetToken = createPasswordResetToken();
+	const resetToken = user.createPasswordResetToken();
 	await user.save({validateBeforeSave:false});
 
+	const resetURL = `${req.protocol}://${req.get('host')}/api/users/resetPassword/${resetToken}`
+	const message = `Forgot your password ? Submit a request with your new password and password Confirm to ${resetURL}  \n If you didnt, please ignore this email`
 
+
+	try{
+		await sendEmail({
+		email:user.email,
+		subject:'Password Reset Token',
+		message:message
+		})
+
+	res.status.json({
+		status:'success',
+		message:'Token sent to email'
+	})
+	}catch(err){
+		user.passwordResetToken = undefined;
+		user.passwordResetExpires = undefined;
+		await user.save({validateBeforeSave:false});
+
+		return next(new AppError("There was an error sending email, Try again later"),500)
+	}
+
+	
 })
-exports.resetPassword = (req,res,next)  => {}
+exports.resetPassword = catchAsync(async(req,res,next)  => {
+	console.log(req)
+})
