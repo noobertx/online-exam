@@ -8,5 +8,6 @@ router.post('/login',authUser.login)
 router.post('/forgotPassword',authUser.forgotPassword)
 router.patch('/resetPassword/:token',authUser.resetPassword)
 router.patch('/updateMyPassword',authUser.protect,authUser.updatePassword)
+router.patch('/updateMe',authUser.protect,authUser.updateMe)
 
 module.exports = router;

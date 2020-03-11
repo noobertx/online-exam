@@ -6,6 +6,16 @@ const jwt = require("jsonwebtoken");
 const AppError = require("./appError")
 const sendEmail = require("./email");
 
+const filterObj = (obj,...allowedFields) => {
+	const newObj = {};
+	Object.keys(obj).forEach(el=>{
+		if(allowedFields.includes(el)){
+			newObj[el]=obj[el];
+		}
+	})
+	return newObj;
+}
+
 const signToken = id => {
 	return jwt.sign({id:id},process.env.REFRESH_TOKEN_SECRET,{
 		expiresIn:process.env.TOKEN_EXPIRES_IN
@@ -37,6 +47,28 @@ exports.getAllUsers = catchAsync(async (req,res,next)=>{
 		}
 	})
 })
+
+exports.updateMe = catchAsync(async(req,res,next) => {
+	if(req.body.password || req.body.passwordConfirm ){
+		return next(new AppError("This route is not for password update user/updateMYPassword",400))
+	}
+
+
+	const filteredBody = filterObj(req.body,'name','email');
+
+	const updatedUser = await User.findByIdAndUpdate(req.user.id,filteredBody,{
+		new:true,
+		runValidators:true
+	});
+
+	res.status(200).json({
+		status:"success",
+		data:{
+			user:updatedUser
+		}
+	})
+})
+
 exports.signup = catchAsync( async(req,res,next) => {
 	const newUser = await User.create({
 		name:req.body.name,
