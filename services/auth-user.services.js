@@ -13,6 +13,20 @@ const signToken = id => {
 }
 
 
+
+const createSendToken = (user,statusCode,res)=>{
+	
+	const token = signToken(user._id)
+
+	res.status(statusCode).json({
+		status:'success',
+		token,
+		data:{
+			user: user
+		}
+	})
+
+}
 exports.getAllUsers = catchAsync(async (req,res,next)=>{
 	const users = await User.find()
 	res.status(200).json({
@@ -30,17 +44,9 @@ exports.signup = catchAsync( async(req,res,next) => {
 		password:req.body.password,
 		passwordConfirm:req.body.passwordConfirm
 	});
+	createSendToken(newUser,201,res)
 
-
-	const token = signToken(newUser._id)
-
-	res.status(201).json({
-		status:'success',
-		token,
-		data:{
-			user: newUser
-		}
-	})
+	
 })
 
 exports.login = catchAsync(async(req,res,next) => {
@@ -60,11 +66,9 @@ exports.login = catchAsync(async(req,res,next) => {
 		return next(AppError("Incorrect email or password",401))
 	}
 
-	const token = signToken(user._id)
-	res.status(200).json({
-		status:'success',
-		token
-	})
+	createSendToken(user,200,res)
+
+	
 
 })
 
@@ -151,9 +155,6 @@ exports.resetPassword = catchAsync( async (req,res,next)  => {
 
 	const user =  await User.findOne({passwordResetToken:hashedToken,passwordResetExpires : { $gt:Date.now() }});
 
-
-
-
 	if(!user){
 		console.log("Error")
 		return next(new AppError("Token is invalid or expired",404))
@@ -166,13 +167,19 @@ exports.resetPassword = catchAsync( async (req,res,next)  => {
 
 	await user.save();
 
-	const token = signToken(user._id)
+	createSendToken(user,200,res)
 
-	res.status(200).json({
-		status:'success',
-		token,
-		data:{
-			user: user
-		}
-	})
+})
+
+exports.updatePassword = catchAsync( async (req,res,next)  => {
+	const user = await User.findById(req.user.id).select("+password");
+	if(!(await user.correctPassword(req.body.passwordCurrent,user.password))){
+		return next(new AppError("Your Current password is incorrect",401))
+	}
+
+	user.password = req.body.password;
+	user.passwordConfirm = req.body.passwordConfirm;
+	await user.save();
+
+	createSendToken(user,200,res)
 })
