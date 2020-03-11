@@ -38,7 +38,7 @@ const createSendToken = (user,statusCode,res)=>{
 
 }
 exports.getAllUsers = catchAsync(async (req,res,next)=>{
-	const users = await User.find()
+	const users = await User.find({})
 	res.status(200).json({
 		status:'success',
 		results:users.length,
@@ -69,6 +69,15 @@ exports.updateMe = catchAsync(async(req,res,next) => {
 	})
 })
 
+
+exports.deleteMe = catchAsync(async(req,res,next)=> {
+	await User.findByIdAndUpdate(req.user.id,{active:false})
+
+	res.status(204).json({
+		status:"success",
+		data:null
+	})
+})
 exports.signup = catchAsync( async(req,res,next) => {
 	const newUser = await User.create({
 		name:req.body.name,
