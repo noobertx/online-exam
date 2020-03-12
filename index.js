@@ -8,6 +8,7 @@ const rateLimit = require("express-rate-limit");
 const helmet = require("helmet");
 const mongoSanitize = require("express-mongo-sanitize");
 const xss = require("xss-clean");
+const hpp = require("hpp");
 
 const exphbs = require("express-handlebars");
 const logger = require("./middleware/Logger");
@@ -32,9 +33,6 @@ app.use(helmet());
 
 mongoose.connect("mongodb+srv://admin_noobert23:DevSpades1523@onlineexam-id1lr.mongodb.net/online-exam?authSource=admin&replicaSet=OnlineExam-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true").then(()=>console.log("DB Connection Successful")).catch(err=>console.log("ERROR"));
 
-// Body Parse Middleware
-
-
 const limiter = rateLimit({
 	max: 100,
 	windowMS:60*60*1000,
@@ -48,6 +46,9 @@ app.use(mongoSanitize());
 
 // Data sanitization againts xss
 app.use(xss());
+
+// Prevent Parameter Polution
+app.use(hpp());
 
 // BODY PARSERS
 app.use(bodyParser.json());
