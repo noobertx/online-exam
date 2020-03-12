@@ -5,6 +5,7 @@ const cors = require("cors");
 const path = require("path");
 
 const rateLimit = require("express-rate-limit");
+const helmet = require("helmet");
 
 const exphbs = require("express-handlebars");
 const logger = require("./middleware/Logger");
@@ -24,20 +25,27 @@ const AppError = require("./services/appError");
 // const Quiz = require("./models/quiz");
 // const Quiz = require("./models/quiz");
 // app.use(logger);
+// SET HTTP SECURITY
+app.use(helmet());
+
 mongoose.connect("mongodb+srv://admin_noobert23:DevSpades1523@onlineexam-id1lr.mongodb.net/online-exam?authSource=admin&replicaSet=OnlineExam-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true").then(()=>console.log("DB Connection Successful")).catch(err=>console.log("ERROR"));
 
 // Body Parse Middleware
-app.use(bodyParser.json());
-app.use(cors());
+
 
 const limiter = rateLimit({
 	max: 100,
 	windowMS:60*60*1000,
 	message:'Too many request from this IP, please try again in an hour'
 })
-
+// LIMIT REQUEST FROM SAME API
 app.use('/api',limiter)
-app.use(express.json());
+
+
+// BODY PARSERS
+app.use(bodyParser.json());
+app.use(cors());
+app.use(express.json({limit:'10kb'}));
 app.use(express.urlencoded({extended:false}));
 
 // app.use('/api/login',require('./routes/api/login'));
