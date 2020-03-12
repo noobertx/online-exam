@@ -6,6 +6,8 @@ const path = require("path");
 
 const rateLimit = require("express-rate-limit");
 const helmet = require("helmet");
+const mongoSanitize = require("express-mongo-sanitize");
+const xss = require("xss-clean");
 
 const exphbs = require("express-handlebars");
 const logger = require("./middleware/Logger");
@@ -41,6 +43,11 @@ const limiter = rateLimit({
 // LIMIT REQUEST FROM SAME API
 app.use('/api',limiter)
 
+// Data sanitization against NOSQL Injection
+app.use(mongoSanitize());
+
+// Data sanitization againts xss
+app.use(xss());
 
 // BODY PARSERS
 app.use(bodyParser.json());
