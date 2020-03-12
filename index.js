@@ -3,6 +3,9 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const path = require("path");
+
+const rateLimit = require("express-rate-limit");
+
 const exphbs = require("express-handlebars");
 const logger = require("./middleware/Logger");
 const members = require("./Members");
@@ -26,6 +29,14 @@ mongoose.connect("mongodb+srv://admin_noobert23:DevSpades1523@onlineexam-id1lr.m
 // Body Parse Middleware
 app.use(bodyParser.json());
 app.use(cors());
+
+const limiter = rateLimit({
+	max: 100,
+	windowMS:60*60*1000,
+	message:'Too many request from this IP, please try again in an hour'
+})
+
+app.use('/api',limiter)
 app.use(express.json());
 app.use(express.urlencoded({extended:false}));
 
