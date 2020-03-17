@@ -21,6 +21,14 @@ const resultSchema = new mongoose.Schema({
 })
 
 
+resultSchema.pre(/^find/,function(next){
+	this.populate({
+		path:'user',
+		select:'name'
+	})
+	next();
+})
+
 const Result = mongoose.model('Result',resultSchema);
 
 module.exports = Result;
