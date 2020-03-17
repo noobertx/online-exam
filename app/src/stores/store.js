@@ -11,5 +11,5 @@ export const store = new Vuex.Store({
         account,
         quiz,
         quizPaper
-    }
+    },
 })

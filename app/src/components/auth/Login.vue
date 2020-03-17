@@ -33,8 +33,8 @@
   		data(){  
   			return {
   				user:{
-  					email:"songoku@email.com",
-  					password:"123456",
+  					email:"admin-noobert2@online-exam.com",
+  					password:"adminpass1234",
   				},
           userdata:{
 
@@ -44,7 +44,7 @@
   		methods:{
   			async logInUser(){
           this.userdata = await LoginService.getLogin(this.user);          
-          this.$store.commit('saveToken',this.userdata);
+          // this.$store.commit('saveToken',this.userdata);
   			}
   		}
   	}
