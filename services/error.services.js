@@ -9,21 +9,18 @@ const sendErrorDev = (err,res)=>{
 }
 const sendErrorProduction = (err,res)=>{
 
-	res.status(err.statusCode).json({
-		status:err.status,
-		message:err.message,
-	})
+
 	if(err.isOperational){
-	// 	res.status(err.statusCode).json({
-	// 		status:err.status,
-	// 		message:err.message,
-	// 	})
-	// }else{
-	// 	res.status(500).json({
-	// 		status:"Error",
-	// 		err:err,
-	// 		message:"Something went very wrong!"
-	// 	})
+		res.status(err.statusCode).json({
+			status:err.status,
+			message:err.message,
+		})
+	}else{
+		res.status(500).json({
+			status:"Error",
+			err:err,
+			message:"Something went very wrong!"
+		})
 	}
 }
 const handleCastErrorDB = err => {
@@ -52,7 +49,6 @@ module.exports = (err,req,res,next)=>{
 	err.status = err.status || 'error';
 
 	// res.status(err.statusCode).json({
-	// 	err,
 	// 	status:err.status,
 	// 	message:err.message,
 	// })
@@ -62,17 +58,20 @@ module.exports = (err,req,res,next)=>{
 	// }else if(process.env.NODE_ENV === 'production' ){
 	// 	sendErrorProduction(err,res);
 
-	let  error = { ...err };
+	// let  error = { ...err };
+
+
+
 	// if(error.name==="CastError") error = handleCastErrorDB(error)
 	// if(error.code===11000) error = handleDuplicateFieldsDB(error)
 	// if(error.name==="ValidationError") error = handleValidationErrorDB(error)
 		
 	// if(error.name==="JsonWebTokenError") error = handleJWTError(error)
-	if(error.name==="TokenExpiredError") error = handleJWTExpiredError(error)
+	// if(error.name==="TokenExpiredError") error = handleJWTExpiredError(error)
 	
 
 
-	sendErrorProduction(error,res);
+	sendErrorProduction(err,res);
 
 
 
