@@ -19,6 +19,9 @@ exports.getAllResults = catchAsync(async(req,res,next) => {
 })
 
 exports.createResult = catchAsync(async(req,res,next)=>{
+
+	if(!req.body.quiz) req.body.quiz = req.params.quizId
+	if(!req.body.user) req.body.user = req.user.id
 	const newResult = await Result.create(req.body)
 
 	res.status(201).json({
