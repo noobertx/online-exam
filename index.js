@@ -20,8 +20,8 @@ const app = express();
 const multer = require('multer');
 const upload = multer();
 const User = require("./services/User.services");
-const GlobalErrorHandler = require("./services/error.services");
 const AppError = require("./services/appError");
+const GlobalErrorHandler = require("./services/error.services");
 
 
 // const Users = require("./models/user");
@@ -48,7 +48,11 @@ app.use(mongoSanitize());
 app.use(xss());
 
 // Prevent Parameter Polution
-app.use(hpp());
+app.use(hpp({
+	// whitelist fields	
+	whitelist:[
+	]
+}));
 
 // BODY PARSERS
 app.use(bodyParser.json());
@@ -61,6 +65,7 @@ app.use(express.urlencoded({extended:false}));
 // app.use('/api/questions',require('./routes/api/questions'));
 app.use('/api/quiz',require('./routes/api/quizzes'));
 app.use('/api/user',require('./routes/api/user.api.js'));
+app.use('/api/result',require('./routes/api/result.js'));
 // app.use('/api/history',require('./routes/api/history'));
 // var db = mongoose.connection;
 

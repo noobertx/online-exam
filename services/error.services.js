@@ -58,7 +58,10 @@ module.exports = (err,req,res,next)=>{
 	// }else if(process.env.NODE_ENV === 'production' ){
 	// 	sendErrorProduction(err,res);
 
-	// let  error = { ...err };
+	let  error = { ...err };
+	// res.status(err.statusCode).json({
+	// 	error
+	// })
 
 
 
