@@ -4,7 +4,10 @@ const AppError = require("./appError");
 
 
 exports.getAllResults = catchAsync(async(req,res,next) => {
-	const results = await Result.find({});
+	let filter = {}
+	if(req.params.quizId) filter = {quiz:req.params.quizId}
+
+	const results = await Result.find(filter);
 
 	if(results.length<1){
 		return next(new AppError("Empty Results",404))
