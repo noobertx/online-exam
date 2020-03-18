@@ -1,7 +1,7 @@
 const Result = require('./../models/result.js');
 const catchAsync = require("./catchAsync.service");
 const AppError = require("./appError");
-
+const factory = require("./handlerFactory");
 
 exports.getAllResults = catchAsync(async(req,res,next) => {
 	let filter = {}
@@ -34,3 +34,5 @@ exports.createResult = catchAsync(async(req,res,next)=>{
 		},
 	})
 })
+
+exports.deleteResult = factory.deleteOne(Result)

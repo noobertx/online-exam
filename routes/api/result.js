@@ -18,4 +18,6 @@ router
 	resultService.createResult
 )
 
+
+router.route("/:id").delete(resultService.deleteResult)
 module.exports = router;
