@@ -5,15 +5,7 @@ const catchAsync = require("./catchAsync.service");
 const factory = require("./handlerFactory");
 
 
-exports.createQuiz = catchAsync( async (req,res,next)=>{
-	const newQuiz = await Quiz.create(req.body.quiz)
-		res.status(201).json({
-			status:'success',
-			data:{
-			quiz:newQuiz
-		}	
-	})	
-})
+exports.createQuiz = factory.createOne(Quiz);
 
 class QuizAPIFeatures{
 		constructor(query,queryString){
