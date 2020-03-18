@@ -79,18 +79,7 @@ exports.getAllQuiz = catchAsync( async(req,res,next)=>{
 	}
 })
 
-exports.getQuizById =  catchAsync( async (req,res,next) => {
-	const quiz = await Quiz.findById(req.params.id);
-	if(!quiz){
-		return next(new AppError('No quiz Found With that ID',404));
-	}
-	res.status(200).json({
-		status:'success',
-		data:{
-			quiz
-		}
-	})
-})
+exports.getQuizById =  factory.getOne(Quiz)
 exports.deleteQuiz = factory.deleteOne(Quiz);
 // exports.deleteQuiz =  catchAsync(async(req,res,next)=>{
 		
