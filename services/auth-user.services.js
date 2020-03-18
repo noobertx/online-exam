@@ -48,16 +48,7 @@ const createSendToken = (user,statusCode,res)=>{
 	})
 
 }
-exports.getAllUsers = catchAsync(async (req,res,next)=>{
-	const users = await User.find({})
-	res.status(200).json({
-		status:'success',
-		results:users.length,
-		data:{
-			users
-		}
-	})
-})
+exports.getAllUsers = factory.getAll(User);
 
 exports.updateMe = catchAsync(async(req,res,next) => {
 	if(req.body.password || req.body.passwordConfirm ){
@@ -235,6 +226,8 @@ exports.updatePassword = catchAsync( async (req,res,next)  => {
 
 	createSendToken(user,200,res)
 })
+
+exports.getUser = factory.getOne(User);
 
 exports.deleteUser = factory.deleteOne(User);
 // Do not update passwords with this
