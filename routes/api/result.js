@@ -15,6 +15,7 @@ router
 )
 .post(
 	authUser.protect,
+	resultService.setUserQuizId,
 	resultService.createResult
 )
 
