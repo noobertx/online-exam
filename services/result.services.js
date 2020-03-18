@@ -36,3 +36,5 @@ exports.createResult = catchAsync(async(req,res,next)=>{
 })
 
 exports.deleteResult = factory.deleteOne(Result)
+
+exports.updateResult = factory.updateOne(Result);

@@ -99,33 +99,18 @@ exports.getQuizById =  catchAsync( async (req,res,next) => {
 		}
 	})
 })
-
-exports.deleteQuiz =  catchAsync(async(req,res,next)=>{
+exports.deleteQuiz = factory.deleteOne(Quiz);
+// exports.deleteQuiz =  catchAsync(async(req,res,next)=>{
 		
-	const quiz = await Quiz.deleteOne({_id:req.params.id});
-	if(!quiz){
-		return next(new AppError('No quiz Found With that ID',404));
-	}
-	res.status(200).json(quiz)
+// 	const quiz = await Quiz.deleteOne({_id:req.params.id});
+// 	if(!quiz){
+// 		return next(new AppError('No quiz Found With that ID',404));
+// 	}
+// 	res.status(200).json(quiz)
 
-})
+// })
 
-exports.updateQuizById =  catchAsync(async(req,res,next)=>{	
-	const body = req.body.quiz
-	const quiz = await Quiz.updateOne({_id:req.params.id},{
-		$set:{
-			title:body.title,
-			intro:body.intro,
-			quizItems:body.quizItems,
-			settings:body.settings,
-			meta:body.meta
-		}
-	});
-	if(!quiz){
-		return next(new AppError('No quiz Found With that ID',404));
-	}
-	res.status(200).json(quiz)	
-})
+exports.updateQuizById =  factory.updateOne(Quiz)
 
 /*
 	router.route('tour-stats').get(tourController.getTourStats);

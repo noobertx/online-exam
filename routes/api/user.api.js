@@ -14,6 +14,8 @@ router.patch('/updateMe',authUser.protect,authUser.updateMe)
 router.delete('/deleteMe',authUser.protect,authUser.deleteMe)
 
 
-// router.route('/:quizId/result').get(authUser.protect,Result.getAllResults)
+router.route("/:id")
+.patch(authUser.protect,authUser.updateUser)
+.delete(authUser.protect,authUser.restrictTo("admin"),authUser.deleteUser)
 
 module.exports = router;

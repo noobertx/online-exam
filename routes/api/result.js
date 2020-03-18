@@ -18,6 +18,12 @@ router
 	resultService.createResult
 )
 
-
-router.route("/:id").delete(resultService.deleteResult)
+router.route("/:id").patch(
+	authUser.protect,
+	resultService.updateResult
+).delete(
+	authUser.protect,
+	authUser.restrictTo("admin"),
+	resultService.deleteResult
+)
 module.exports = router;

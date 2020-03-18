@@ -5,6 +5,7 @@ const catchAsync = require("./catchAsync.service");
 const jwt = require("jsonwebtoken");
 const AppError = require("./appError")
 const sendEmail = require("./email");
+const factory = require("./handlerFactory");
 
 const filterObj = (obj,...allowedFields) => {
 	const newObj = {};
@@ -234,3 +235,7 @@ exports.updatePassword = catchAsync( async (req,res,next)  => {
 
 	createSendToken(user,200,res)
 })
+
+exports.deleteUser = factory.deleteOne(User);
+// Do not update passwords with this
+exports.updateUser = factory.updateOne(User);

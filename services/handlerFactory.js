@@ -11,3 +11,20 @@ exports.deleteOne = Model => catchAsync(async(req,res,next)=>{
 		data:null
 	})
 })
+
+exports.updateOne = Model=> catchAsync(async(req,res,next)=>{	
+	const body = req.body.quiz
+	const doc = await Model.findByIdAndUpdate(req.params.id,{
+		new:true,
+		runValidators:true
+	});
+	if(!doc){
+		return next(new AppError('No quiz Found With that ID',404));
+	}
+	res.status(200).json({
+		status:"success",
+		data:{
+			data:doc
+		}
+	})	
+})
