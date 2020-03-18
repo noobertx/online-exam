@@ -7,6 +7,13 @@ const Result = require("../../services/result.services");
 // const {getAllQuiz,getQuizById,deleteQuiz} = require("../../services/Quiz.services");
 
 const Quiz = require("../../services/Quiz.services");
+
+const resultRouter = require("../../routes/api/result");
+
+
+router.use("/:quizId/result",resultRouter)
+
+
 router.route("/")
 .get(authUser.protect,Quiz.getAllQuiz)
 .post(

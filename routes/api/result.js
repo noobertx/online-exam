@@ -3,9 +3,12 @@ const catchAsync = require("./../../services/catchAsync.service");
 const resultService = require("./../../services/result.services");
 const authUser = require("../../services/auth-user.services");
 
-const router = express.Router();
+const router = express.Router({
+	mergeParams:true
+});
 
-router.route("/")
+router
+.route("/")
 .get(
 	authUser.protect,
 	resultService.getAllResults
