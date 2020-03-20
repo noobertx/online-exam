@@ -232,3 +232,8 @@ exports.getUser = factory.getOne(User);
 exports.deleteUser = factory.deleteOne(User);
 // Do not update passwords with this
 exports.updateUser = factory.updateOne(User);
+
+exports.getMe = (req,res,next)=>{
+	req.params.id = req.user.id
+	next();
+}
