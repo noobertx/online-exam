@@ -109,18 +109,16 @@ let refreshTokens = []
 
 // Handle Production
 // if(process.env.NODE_ENV==='production'){
-	app.use(express.static(path.join(__dirname+'/public')));
+	app.use(express.static(path.join(__dirname+'/app/app/')));
 // 	app.get(/.*/,(req,res)=>res.sendFile(__dirname+'/public/index.html'));
 // }
 
 
 const PORT = process.env.PORT || 5000;
-app.get('/',(req,res)=>{
-	res.status(200).render('base',{
-		author:'Robert Talavera',
-		role:'Developer'
-	})
-})
+// app.get('/',(req,res)=>{
+// 	console.log("base")
+// 	res.status(200).render('base')
+// })
 // app.all("*",(req,res,next)=>{
 // 	next(new AppError(`Cant' find ${req.originalUrl} on this server`,404));
 // });
