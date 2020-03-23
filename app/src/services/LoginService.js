@@ -17,7 +17,8 @@ class LoginService{
 					data
 				)
 			}catch(err){
-				reject(err);
+				console.log(err);
+				// reject(err);
 			}
 		})
 	}

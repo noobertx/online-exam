@@ -106,7 +106,7 @@ exports.login = catchAsync(async(req,res,next) => {
 	const correct = await user.correctPassword(password,user.password);
 	// If everything is ok, send token to the client
 	if(!correct || !user){
-		return next(AppError("Incorrect email or password",401))
+		return next(new AppError("Incorrect email or password",401))
 	}
 
 	createSendToken(user,200,res)
