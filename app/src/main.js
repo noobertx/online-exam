@@ -12,6 +12,8 @@ import VueToast from 'vue-toast-notification';
 import 'vue-toast-notification/dist/index.css';
 import VueProgressBar from 'vue-progressbar'
 
+const authUser = require("../../services/auth-user.services");
+
 
 Vue.config.productionTip = false
 Vue.use(VueRouter)
