@@ -9,6 +9,7 @@ const helmet = require("helmet");
 const mongoSanitize = require("express-mongo-sanitize");
 const xss = require("xss-clean");
 const hpp = require("hpp");
+const cookieParser = require('cookie-parser');
 
 const exphbs = require("express-handlebars");
 const logger = require("./middleware/Logger");
@@ -46,6 +47,7 @@ const limiter = rateLimit({
 })
 // LIMIT REQUEST FROM SAME API
 app.use('/api',limiter)
+app.use(cookieParser())
 
 // Data sanitization against NOSQL Injection
 app.use(mongoSanitize());
@@ -85,7 +87,11 @@ app.post('/api/login',(req,res)=>{
 })
 
 
-
+app.get('/',(req,res)=>{
+	console.log(req.cookies);
+	console.log("base")
+// 	res.status(200).render('base')
+})
 //User Authentication
 
 const posts =[
@@ -115,10 +121,7 @@ let refreshTokens = []
 
 
 const PORT = process.env.PORT || 5000;
-// app.get('/',(req,res)=>{
-// 	console.log("base")
-// 	res.status(200).render('base')
-// })
+
 // app.all("*",(req,res,next)=>{
 // 	next(new AppError(`Cant' find ${req.originalUrl} on this server`,404));
 // });

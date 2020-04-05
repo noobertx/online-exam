@@ -189,21 +189,25 @@ const routes = [
   // { path: '/questions', component:require("./components/QuestionsComponent.vue").default }
 ]
 
-// function authenticateToken(req,res,next){
-//  const authHeader = req.headers['authorization'];
-//  const token = authHeader &&  authHeader.split(" ")[1];
-//  if(token == null) return res.sendStatus(401)
-//    jwt.verify(token,process.env.ACCESS_TOKEN_SECRET,(err,user)=>{
-//      if(err)  return res.sendStatus(403)     
-//      req.user = user
-//      next()
-//    })
-// }
+
 
 const router = new VueRouter({
   routes // short for `routes: routes`
 })
 
+router.beforeEach((to, from, next) => {
+  // redirect to login page if not logged in and trying to access a restricted page
+  const publicPages = ['/login', '/register'];
+  const authRequired = !publicPages.includes(to.path);
+  const loggedIn = authUser.isLoggedIn();
+  // if (authRequired && !loggedIn) {
+    // return next('/login');
+  // }
+  // 
+  next();
+
+ 
+})
 
 //https://scotch.io/tutorials/vue-authentication-and-route-handling-using-vue-router
 // router.beforeEach((to, from, next) => {

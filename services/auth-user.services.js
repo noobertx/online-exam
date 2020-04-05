@@ -102,10 +102,10 @@ exports.login = catchAsync(async(req,res,next) => {
 		return next(new AppError('Please provide email and password',400));
 	}
 	// check if user exists && password is valid
-	const user =await User.findOne({email}).select('+password')
-	const correct = await user.correctPassword(password,user.password);
+	const user = await User.findOne({email}).select('+password')
+
 	// If everything is ok, send token to the client
-	if(!correct || !user){
+	  if (!user || !(await user.correctPassword(password, user.password))) {
 		return next(new AppError("Incorrect email or password",401))
 	}
 
@@ -115,12 +115,40 @@ exports.login = catchAsync(async(req,res,next) => {
 
 })
 
+exports.isLoggedIn  = catchAsync(async (req,res,next) => {
+	// get the token and see if its there
+	if(req.cookies.jwt){
+		// validate token
+		const decoded = await promisify(jwt.verify)(req.cookies.jwt, process.env.REFRESH_TOKEN_SECRET);	
+
+		// if user exists
+		const freshUser = await User.findById(decoded.id);
+		if(!freshUser){
+			return next();
+		}
+
+		//user changed password after JWT was issued
+
+		if(freshUser.changePasswordAfter(decoded.iat)){
+			return next();
+		}
+
+		// THERE IS A LOGGED IN USER
+		res.locals.user  = freshUser;
+		next();
+	}
+	next()
+})
+
+
 
 exports.protect  = catchAsync(async (req,res,next) => {
 	let token;
 	// get the token and see if its there
 	if(req.headers.authorization && req.headers.authorization.startsWith('Bearer')){
 		token = req.headers.authorization.split(" ")[1];
+	}else if(req.cookies.jwt){
+		token = req.cookies.jwt;
 	}
 	if(!token){
 		return next(new AppError('You are not logged In! Please login to get access',401))
@@ -173,11 +201,11 @@ exports.forgotPassword =catchAsync(async (req,res,next)  => {
 
 
 	try{
-		await sendEmail({
-		email:user.email,
-		subject:'Password Reset Token',
-		message:message
-		})
+		// await sendEmail({
+		// email:user.email,
+		// subject:'Password Reset Token',
+		// message:message
+		// })
 
 	res.status(200).json({
 		status:'success',
