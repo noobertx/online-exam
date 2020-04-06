@@ -5,15 +5,9 @@ html
   link(rel='stylesheet' type="text/css" href='/assets/bootstrap/dist/css/bootstrap.min.css')
   link(rel='icon' type='image/png' href='/favicon.png')
  body
-  header
-   .container
-    .row
-     .col.col-xs-12.col-lg-3
-       h1 Online exam
-     .col.col-xs-12.col-lg-9
-      a.btn.btn-light.btn-outline-info.pull-right.mt-2(style="float:right;") Login
-      a.btn.btn-light.btn-outline-info.pull-right.mt-2.mr-2(style="float:right;") Sign Up
+  include _header
   .container
-   p Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,   quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo   consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse  cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non  proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-    script(src='/assets/jquery.min.js')
-    script(src='/assets/bootstrap/dist/js/bootstrap.min.js')
+   block content
+    p Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,   quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo   consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse  cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non  proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+  script(src='/assets/jquery.min.js')
+  script(src='/assets/bootstrap/dist/js/bootstrap.min.js')

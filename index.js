@@ -79,7 +79,12 @@ app.use('/api/result',require('./routes/api/result.js'));
 // app.use('/api/history',require('./routes/api/history'));
 // var db = mongoose.connection;
 
-
+app.get('/sign-up',(req,res)=>{
+	res.status(200).render('templates/sign-up');
+})
+app.get('/login',(req,res)=>{
+	res.status(200).render('templates/login');
+})
 
 
 app.post('/api/login',(req,res)=>{
