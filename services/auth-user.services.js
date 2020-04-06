@@ -209,6 +209,7 @@ exports.forgotPassword =catchAsync(async (req,res,next)  => {
 
 	res.status(200).json({
 		status:'success',
+		resetURL,
 		message:'Token sent to email'
 	})
 	}catch(err){
@@ -250,6 +251,7 @@ exports.updatePassword = catchAsync( async (req,res,next)  => {
 
 	user.password = req.body.password;
 	user.passwordConfirm = req.body.passwordConfirm;
+	
 	await user.save();
 
 	createSendToken(user,200,res)

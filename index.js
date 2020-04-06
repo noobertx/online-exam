@@ -89,8 +89,8 @@ app.post('/api/login',(req,res)=>{
 
 app.get('/',(req,res)=>{
 	console.log(req.cookies);
-	console.log("base")
-// 	res.status(200).render('base')
+
+	res.status(200).render('base')
 })
 //User Authentication
 
@@ -115,7 +115,7 @@ let refreshTokens = []
 
 // Handle Production
 // if(process.env.NODE_ENV==='production'){
-	app.use(express.static(path.join(__dirname+'/app/app/')));
+	app.use(express.static(path.join(__dirname+'/views/base')));
 // 	app.get(/.*/,(req,res)=>res.sendFile(__dirname+'/public/index.html'));
 // }
 
