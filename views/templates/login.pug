@@ -1,4 +1,19 @@
 extends ../base
 
 block content
- h5 Login Form
+ .sign-up
+  .row
+   .col.col-xs-12.col-lg-6
+    .card
+     .card-body
+      h2.card-text.text-center
+       | Log in your account
+      form.form
+       .form-group
+        label.email|Email
+        input(type="text" name="email")#email.form-control
+       .form-group
+        label.password|Password
+        input(type="password" name="password")#password.form-control
+       .form-group
+        button.btn.btn-success.btn-block|Log In

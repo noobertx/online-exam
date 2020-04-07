@@ -64,7 +64,10 @@ app.use(hpp({
 
 // BODY PARSERS
 app.use(bodyParser.json());
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:5000',
+  optionsSuccessStatus: 200
+}));
 app.use(express.json({limit:'10kb'}));
 app.use(express.urlencoded({extended:false}));
 
@@ -83,7 +86,9 @@ app.get('/sign-up',(req,res)=>{
 	res.status(200).render('templates/sign-up');
 })
 app.get('/login',(req,res)=>{
-	res.status(200).render('templates/login');
+	res.status(200).render('templates/login',{
+		title:'Please log into your account'
+	});
 })
 
 
