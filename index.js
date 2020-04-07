@@ -22,6 +22,7 @@ const multer = require('multer');
 const upload = multer();
 const User = require("./services/User.services");
 const AppError = require("./services/appError");
+const authController = require("./services/auth-user.services");
 const GlobalErrorHandler = require("./services/error.services");
 
 const pug = require('pug');
@@ -64,14 +65,13 @@ app.use(hpp({
 
 // BODY PARSERS
 app.use(bodyParser.json());
-app.use(cors({
-  origin: 'http://localhost:5000',
-  optionsSuccessStatus: 200
-}));
+app.use(cors());
 app.use(express.json({limit:'10kb'}));
 app.use(express.urlencoded({extended:false}));
 
-
+app.use((req,res,next)=>{	
+	next();
+});
 
 // app.use('/api/login',require('./routes/api/login'));
 // app.use('/api/members',require('./routes/api/members'));
@@ -81,15 +81,7 @@ app.use('/api/user',require('./routes/api/user.api.js'));
 app.use('/api/result',require('./routes/api/result.js'));
 // app.use('/api/history',require('./routes/api/history'));
 // var db = mongoose.connection;
-
-app.get('/sign-up',(req,res)=>{
-	res.status(200).render('templates/sign-up');
-})
-app.get('/login',(req,res)=>{
-	res.status(200).render('templates/login',{
-		title:'Please log into your account'
-	});
-})
+app.use('/',require('./routes/viewRoutes.js'));
 
 
 app.post('/api/login',(req,res)=>{
@@ -98,7 +90,6 @@ app.post('/api/login',(req,res)=>{
 
 
 app.get('/',(req,res)=>{
-	console.log(req.cookies);
 
 	res.status(200).render('base')
 })

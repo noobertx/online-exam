@@ -5,7 +5,7 @@ const login =async (email,password)=>{
     try{       
     const res = await axios({
         method:'POST',
-        url:'htto://localhost:5000/api/user/login',
+        url:'http://localhost:5000/api/user/login',
         data:{
             email,
             password
@@ -13,7 +13,7 @@ const login =async (email,password)=>{
     })
     console.log(res);
     }catch(err){
-        console.log(err)
+        console.log(err.message)
     }
 }
 
