@@ -11,9 +11,12 @@ const login =async (email,password)=>{
             password
         }
     })
-    console.log(res);
-    }catch(err){
-        console.log(err.message)
+    if(res.data.status==='success'){
+        alert("Logged In succesfully");        
+        location.assign('/profile')       
+    }
+    }catch(err){        
+        alert(err.response.data.message);
     }
 }
 
